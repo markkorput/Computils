@@ -3,16 +3,17 @@ using System.Collections;
 
 namespace Computils.Populators
 {
+	[AddComponentMenu("Computils/Populators/Mesh Verts Buffer Populator")]
     class MeshVertBufferPopulator : MonoBehaviour
     {
         public enum MeshInterpretation { Vertices, Triangles };
-
+      
         public ComputeBufferFacade Facade;
         public MeshFilter MeshFilter;
         public MeshInterpretation Interpretation = MeshInterpretation.Vertices;
         public float ScaleFactor = 1.0f;
-
-        private void Start()
+      
+        private void OnEnable()
         {
             Vector3[] verts = null;
          

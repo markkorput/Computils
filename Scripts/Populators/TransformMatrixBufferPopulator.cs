@@ -2,6 +2,8 @@
 using System.Collections;
 
 namespace Computils.Populators {
+   
+	[AddComponentMenu("Computils/Populators/Transform Matrices Buffer Populator")]
 	public class TransformMatrixBufferPopulator : MonoBehaviour
 	{
 		public ComputeBufferFacade Facade;
