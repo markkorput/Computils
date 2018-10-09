@@ -3,7 +3,9 @@ guid: 49b8ca94a636949e9bb201e2833a6f0d
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - VertsBufFacade: {instanceID: 0}
+  - RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
