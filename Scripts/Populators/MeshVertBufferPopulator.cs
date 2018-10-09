@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+#define BOUNDING_BOX
+#endif
+
+using UnityEngine;
 using System.Collections;
 
 namespace Computils.Populators
@@ -12,8 +16,14 @@ namespace Computils.Populators
         public MeshFilter MeshFilter;
         public MeshInterpretation Interpretation = MeshInterpretation.Vertices;
         public float ScaleFactor = 1.0f;
+
+#if BOUNDING_BOX
+		[Header("Read-Only")]
+		public Vector3 BoundingBoxMin;
+		public Vector3 BoundingBoxMax;
+#endif
       
-        private void OnEnable()
+		private void OnEnable()
         {
             Vector3[] verts = null;
          
@@ -25,22 +35,40 @@ namespace Computils.Populators
 
             if (verts != null)
             {
+#if BOUNDING_BOX
+				if (verts.Length > 0)
+				{
+					BoundingBoxMin = BoundingBoxMax = verts[0];
+            
+					foreach (var vert in verts)
+					{
+						if (vert.x < this.BoundingBoxMin.x) this.BoundingBoxMin.x = vert.x;
+						if (vert.y < this.BoundingBoxMin.y) this.BoundingBoxMin.y = vert.y;
+						if (vert.z < this.BoundingBoxMin.z) this.BoundingBoxMin.z = vert.z;
+           				if (vert.x > this.BoundingBoxMax.x) this.BoundingBoxMax.x = vert.x;
+                        if (vert.y > this.BoundingBoxMax.y) this.BoundingBoxMax.y = vert.y;
+                        if (vert.z > this.BoundingBoxMax.z) this.BoundingBoxMax.z = vert.z;
+    				}
+				}
+#endif
                 ComputeBuffer buf = Utils.Create(verts);
                 Facade.Set(buf);
             }
         }
-
-        private static Vector3[] GetVerts(Mesh mesh, float ScaleFactor)
+      
+        public static Vector3[] GetVerts(Mesh mesh, float ScaleFactor)
         {
             Vector3[] data = new Vector3[mesh.vertices.Length];
 
-            for (int i = 0; i < mesh.vertices.Length; i++)
-                data[i] = mesh.vertices[i] * ScaleFactor;
+			for (int i = 0; i < mesh.vertices.Length; i++)
+			{
+				data[i] = mesh.vertices[i] * ScaleFactor;
+			}
 
             return data;
         }
 
-        private static Vector3[] GetTriangleVerts(Mesh mesh, float ScaleFactor)
+		public static Vector3[] GetTriangleVerts(Mesh mesh, float ScaleFactor)
         {
             int[] vertIndices = mesh.GetTriangles(0);
             Vector3[] data = new Vector3[vertIndices.Length];

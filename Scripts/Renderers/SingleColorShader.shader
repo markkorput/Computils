@@ -1,6 +1,6 @@
 ﻿// from: http://panbaked.com/wp/?p=29
 
-Shader "Computils/SingleColor"
+Shader "Computils/Single Color Shader"
 {
     Properties
     {
@@ -16,11 +16,11 @@ Shader "Computils/SingleColor"
         Pass
         {
             CGPROGRAM
-            #pragma target 5.0
+            #pragma target 4.0
 
             #pragma vertex vert
             #pragma fragment frag
- 
+
             #include "UnityCG.cginc"
 
             float4 MainColor;
@@ -49,11 +49,11 @@ Shader "Computils/SingleColor"
             {
                 return MainColor; //float4(1,0.5f,0.0f,0.5f);
             }
- 
+
             ENDCG
- 
+
         }
     }
- 
+
     Fallback Off
 }

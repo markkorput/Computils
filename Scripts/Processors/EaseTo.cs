@@ -39,7 +39,7 @@ namespace Computils.Processors
         {
             if (VertsFacade.Get() == null || TargetsFacade.Get() == null) return;
             if (TargetsFacade.Get().count < VertsFacade.Get().count) return; // TODO log warning
-
+         
             if (_count != this.VertsFacade.Get().count)
             {
                 this._count = (uint)this.VertsFacade.Get().count;

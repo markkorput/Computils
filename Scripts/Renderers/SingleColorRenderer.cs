@@ -22,10 +22,15 @@ namespace Computils.Renderers
         [Header("Read-Only")]
         public int VertCount = 0;
 #endif
+
+		private void Start()
+		{
+			this.RenderMaterial = new Material(this.RenderMaterial);
+		}
       
-        //After all rendering is complete we dispatch the compute shader and then set the material before drawing with DrawProcedural
-        //this just draws the "mesh" as a set of points
-        void OnPostRender()
+		//After all rendering is complete we dispatch the compute shader and then set the material before drawing with DrawProcedural
+		//this just draws the "mesh" as a set of points
+		void OnPostRender()
         {
 			var buf = this.VertsBufFacade.GetValid();
          
@@ -37,7 +42,7 @@ namespace Computils.Renderers
 #endif
 			}
         }
-      
+
 		private static void Render(Material mat, ComputeBuffer vertsBuffer, MeshTopology topo, Color clr)
         {
             mat.SetPass(0);
