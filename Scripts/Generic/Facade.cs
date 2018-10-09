@@ -15,7 +15,7 @@ namespace Computils.Generic {
         public Typ Get() {
           return inst;
         }
-      
+
         public void Set(Typ val)
         {
 			bool change = !AreEqual(val, this.inst);
