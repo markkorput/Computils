@@ -14,9 +14,9 @@ namespace Computils.Populators
       
         public ComputeBufferFacade Facade;
         public MeshFilter MeshFilter;
-        public MeshInterpretation Interpretation = MeshInterpretation.Vertices;
-        public float ScaleFactor = 1.0f;
-
+        public MeshInterpretation Interpretation = MeshInterpretation.Triangles;
+		public Transform Transformer;
+      
 #if BOUNDING_BOX
 		[Header("Read-Only")]
 		public Vector3 BoundingBoxMin;
@@ -28,10 +28,10 @@ namespace Computils.Populators
             Vector3[] verts = null;
          
             if (this.Interpretation.Equals(MeshInterpretation.Vertices))
-                verts = GetVerts(MeshFilter.mesh, this.ScaleFactor);
+				verts = GetVerts(MeshFilter.mesh, this.Transformer == null ? Matrix4x4.identity : this.Transformer.localToWorldMatrix);
 
             if (this.Interpretation.Equals(MeshInterpretation.Triangles))
-                verts = GetTriangleVerts(MeshFilter.mesh, this.ScaleFactor);
+				verts = GetTriangleVerts(MeshFilter.mesh, this.Transformer == null ? Matrix4x4.identity : this.Transformer.localToWorldMatrix);
 
             if (verts != null)
             {
@@ -56,26 +56,26 @@ namespace Computils.Populators
             }
         }
       
-        public static Vector3[] GetVerts(Mesh mesh, float ScaleFactor)
+        public static Vector3[] GetVerts(Mesh mesh, Matrix4x4 transformMatrix)
         {
             Vector3[] data = new Vector3[mesh.vertices.Length];
 
 			for (int i = 0; i < mesh.vertices.Length; i++)
 			{
-				data[i] = mesh.vertices[i] * ScaleFactor;
+				data[i] = transformMatrix * new Vector4(mesh.vertices[i].x, mesh.vertices[i].y, mesh.vertices[i].z, 1);
 			}
 
             return data;
         }
 
-		public static Vector3[] GetTriangleVerts(Mesh mesh, float ScaleFactor)
+		public static Vector3[] GetTriangleVerts(Mesh mesh, Matrix4x4 transformMatrix)
         {
             int[] vertIndices = mesh.GetTriangles(0);
             Vector3[] data = new Vector3[vertIndices.Length];
 
             for (int i = 0; i < vertIndices.Length; i++)
-                data[i] = mesh.vertices[vertIndices[i]] * ScaleFactor;
-
+				data[i] = transformMatrix * new Vector4(mesh.vertices[vertIndices[i]].x, mesh.vertices[vertIndices[i]].y, mesh.vertices[vertIndices[i]].z, 1);
+            
             return data;
         }
     }

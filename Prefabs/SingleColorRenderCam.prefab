@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4095518978004060}
   - component: {fileID: 20156429320427112}
   - component: {fileID: 81477814634958224}
-  - component: {fileID: 114624856206786638}
+  - component: {fileID: 114946242885228680}
   m_Layer: 0
   m_Name: SingleColorRenderCam
   m_TagString: MainCamera
@@ -89,7 +89,7 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1895385210825680}
   m_Enabled: 1
---- !u!114 &114624856206786638
+--- !u!114 &114946242885228680
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,11 +97,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1895385210825680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96c4f4e99e5524c41b95a490919ec88a, type: 3}
+  m_Script: {fileID: 11500000, guid: 49b8ca94a636949e9bb201e2833a6f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   VertsBufFacade: {fileID: 0}
-  RenderMaterial: {fileID: 2100000, guid: 1e0c369368e4e48b1a16a079686bacce, type: 2}
+  RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
   MeshTopology: 0
-  MainColor: {r: 1, g: 1, b: 1, a: 0.22352941}
+  MainColor: {r: 1, g: 0.60280156, b: 0, a: 0.65882355}
   VertCount: 0
