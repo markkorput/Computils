@@ -14,14 +14,22 @@ RWStructuredBuffer<Position> vertBuffer;
 RWStructuredBuffer<Position> targetsBuffer;
 
 int ResolutionX;
+int TargetsCount;
 float EaseFactor;
+bool AnimateAll;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSEaseTo(uint3 id : SV_DispatchThreadID)
 {
-    const int idx = id.x + id.y * ResolutionX;
+    const uint vertidx = id.x + id.y * ResolutionX;
+    uint targetidx = vertidx;
 
-    float3 target = targetsBuffer[idx].pos;
-    float3 vert = vertBuffer[idx].pos;
-    vertBuffer[idx].pos = vert + (target-vert) * EaseFactor;
+    if (vertidx >= (uint)TargetsCount) {
+        if (!AnimateAll) return;
+        targetidx = targetidx % (uint)TargetsCount;
+    }
+
+    float3 target = targetsBuffer[targetidx].pos;
+    float3 vert = vertBuffer[vertidx].pos;
+    vertBuffer[vertidx].pos = vert + (target-vert) * EaseFactor;
 }
