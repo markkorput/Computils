@@ -4,33 +4,29 @@ using UnityEngine;
 
 namespace Computils.Processors.Forces
 {
-    public class GravityForce : Force
+    public class LinearPeerForces : Force
     {
 		private static class ShaderProps {
-			public const string Kernel = "CSForceTo";
-
+			public const string Kernel = "CSPeerForce";
+         
 			public const string positions_buf = "positions_buf";
 			public const string forces_buf = "forces_buf";
-
-			public const string PositionsCount = "PositionsCount";
+         
 			public const string Strength = "Strength";
-			public const string Additive = "Additive";
-			public const string ResolutionX = "ResolutionX";
-			public const string Origin = "Origin";
+			public const string ZeroDist = "ZeroDist";
 		}
       
 		public ComputeBufferFacade Positions;
 		public ComputeShader Shader;      
       
 		public float Strength = 9.81f;
-		public Vector3 Origin;
-		public bool Additive = false;
+		public float ZeroDist = 100.0f;
       
 		private int Kernel;
-        private Vector2Int ThreadSize = new Vector2Int(4, 4);
+        private Vector2Int ThreadSize = new Vector2Int(1, 1);
         private uint count_ = 0;
         private Vector2Int UnitSize;
-
+      
 #if UNITY_EDITOR
         [Header("Read-Only")]
         public int ForcesCount = 0;
@@ -53,21 +49,19 @@ namespace Computils.Processors.Forces
                 Vector2Int resolution = new ThreadSize(this.count_, (uint)ThreadSize.x, (uint)ThreadSize.y).Resolution;
                 uint count = (uint)resolution.x * (uint)resolution.y;
                 this.UnitSize = new ThreadSize(count, (uint)ThreadSize.x, (uint)ThreadSize.y).UnitSize;
-
+            
 #if UNITY_EDITOR
                 // Update info in Unity editor for debugging...
 				this.ForcesCount = (int)count;
 #endif
             }
-
+         
 			// This method should be overwritten by child classes
 			this.Shader.SetBuffer(Kernel, ShaderProps.positions_buf, posBuf);
-			this.Shader.SetBuffer(Kernel, ShaderProps.forces_buf, buffer);
-			this.Shader.SetInt(ShaderProps.PositionsCount, posBuf.count);
+			this.Shader.SetBuffer(Kernel, ShaderProps.forces_buf, buffer);         
 			this.Shader.SetFloat(ShaderProps.Strength, this.Strength);
-            this.Shader.SetInt(ShaderProps.ResolutionX, this.ThreadSize.x * this.UnitSize.x);
-			this.Shader.SetBool(ShaderProps.Additive, this.Additive);
-			this.Shader.SetVector(ShaderProps.Origin, this.Origin);
+			this.Shader.SetFloat(ShaderProps.ZeroDist, this.ZeroDist);
+
             this.Shader.Dispatch(Kernel, UnitSize.x, UnitSize.y, 1);         
 		}
     }

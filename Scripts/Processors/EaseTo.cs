@@ -16,7 +16,7 @@ namespace Computils.Processors
             public const string ResolutionX = "ResolutionX";
 			public const string AnimateAll = "AnimateAll";
         }
-
+      
         public ComputeShader Shader;
         public Computils.ComputeBufferFacade VertsFacade;
         public Computils.ComputeBufferFacade TargetsFacade;

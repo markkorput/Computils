@@ -153,10 +153,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8788d9eb5b13e41b28b596fbe672b0fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Positions: {fileID: 0}
   Shader: {fileID: 7200000, guid: 17a2000101b8a4e69887047328252794, type: 3}
   Strength: 9.81
-  origin: {x: 0, y: 0, z: 0}
+  Origin: {x: 0, y: 0, z: 0}
   Additive: 0
+  ForcesCount: 0
 --- !u!1 &780072695
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,12 +295,58 @@ MonoBehaviour:
   BufferFacade: {fileID: 1081871663}
   Forces:
   - {fileID: 165580325}
+  - {fileID: 1331515855}
 --- !u!114 &1081871663 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114239977061053322, guid: b238bd9f039b44207852b4b3551a7340,
     type: 2}
   m_PrefabInternal: {fileID: 1081871659}
   m_Script: {fileID: 11500000, guid: 93416beb1f4e4481db798e446d66f4eb, type: 3}
+--- !u!1 &1331515853
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1331515854}
+  - component: {fileID: 1331515855}
+  m_Layer: 0
+  m_Name: LinearPeerForces
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1331515854
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1331515853}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1081871661}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1331515855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1331515853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec8781fa0861463eaf97be8b12d9c36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Positions: {fileID: 0}
+  Shader: {fileID: 7200000, guid: 10a35152ca6c0438493809958e283131, type: 3}
+  Strength: 100
+  ZeroDist: 1
+  ForcesCount: 0
 --- !u!1001 &1467028624
 Prefab:
   m_ObjectHideFlags: 0
