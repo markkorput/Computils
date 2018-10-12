@@ -2,9 +2,8 @@
 
 // #pragma target 4.0
 
-#define thread_group_size_x 2
-#define thread_group_size_y 2
-#define thread_group_size_z 1
+#define thread_group_size_x 1
+#define thread_group_size_y 1
 
 struct Position
 {
@@ -22,7 +21,7 @@ RWStructuredBuffer<Force> forces_buf;
 float Strength;
 float ZeroDist;
 
-[numthreads (1, 1, 1)]
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSPeerForce(uint3 id : SV_DispatchThreadID)
 {
     const uint posidx1 = id.x;
@@ -33,8 +32,14 @@ void CSPeerForce(uint3 id : SV_DispatchThreadID)
     float3 pos2 = positions_buf[posidx2].pos;
     float3 delta = pos1 - pos2;
     float dist = length(delta);
-    float3 force = (1.0 - min(dist/ZeroDist, 1.0)) * Strength * normalize(delta);
 
-    const uint forceidx = posidx1;
-    forces_buf[forceidx].force += force;
+    float3 force = float3(0,0,0);
+
+    if (dist > 0.0) {
+        force = (1.0 - min(dist/ZeroDist, 1.0)) * Strength * normalize(delta);
+    } else {
+        force = float3(sin(id.x * 0.0113f) * Strength, cos(id.y * 0.0113f) * Strength, cos(id.x * 0.0113f) * Strength);
+    }
+
+    forces_buf[posidx1].force += force;
 }

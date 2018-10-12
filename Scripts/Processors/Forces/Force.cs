@@ -6,8 +6,8 @@ namespace Computils.Processors.Forces
 {
     public class Force : MonoBehaviour
     {
-		public void Apply(ComputeBuffer buffer) {
-			// This method should be overwritten by child classes
+		public virtual void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf) {
+			Debug.LogWarning("Force.Apply should be overwritten");
 		}
     }
 }

@@ -2,8 +2,8 @@
 
 // #pragma target 4.0
 
-#define thread_group_size_x 2
-#define thread_group_size_y 2
+#define thread_group_size_x 4
+#define thread_group_size_y 4
 
 struct Position
 {
@@ -31,8 +31,17 @@ void CSForceTo(uint3 id : SV_DispatchThreadID)
     uint posidx = forceidx;
     if (posidx >= (uint)PositionsCount) return;
 
-    float3 forceDir = normalize(Origin - positions_buf[posidx].pos);
-    float3 force = forceDir * Strength;
+    float3 pos = positions_buf[posidx].pos;
+    float3 delta = Origin - pos;
+    float3 force = float3(0, 0, 0);
+
+    if (length(delta) > 0.0) {
+        float3 forceDir = normalize(Origin - pos);
+        force = forceDir * Strength;
+    } else {
+        float3(sin(id.x * 0.0113f) * Strength * 0.001, cos(id.y * 0.0113f) * Strength * 0.001, cos(id.x * 0.0113f) * Strength * 0.001);
+    }
+
     if (Additive) force += forces_buf[forceidx].force;
     forces_buf[forceidx].force = force;
 }

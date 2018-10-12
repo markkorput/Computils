@@ -13,15 +13,14 @@ namespace Computils.Processors.Forces
 			public const string forces_buf = "forces_buf";
 
 			public const string PositionsCount = "PositionsCount";
+
 			public const string Strength = "Strength";
 			public const string Additive = "Additive";
 			public const string ResolutionX = "ResolutionX";
 			public const string Origin = "Origin";
 		}
-      
-		public ComputeBufferFacade Positions;
-		public ComputeShader Shader;      
-      
+
+		public ComputeShader Shader;
 		public float Strength = 9.81f;
 		public Vector3 Origin;
 		public bool Additive = false;
@@ -34,22 +33,22 @@ namespace Computils.Processors.Forces
 #if UNITY_EDITOR
         [Header("Read-Only")]
         public int ForcesCount = 0;
+		public Vector2 Res;
+		public Vector2 UnitRes;
 #endif
       
 		private void Start()
         {
             this.Kernel = this.Shader.FindKernel(ShaderProps.Kernel);
         }
-      
-		public new void Apply(ComputeBuffer buffer) {
-			var posBuf = this.Positions.GetValid();
-			if (posBuf == null) return;
 
+		override public void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf)
+        {
 			// Update our UnitSize to match the number of verts in our vertBuf
             // (when multiplied with ThreadSize, which should match the values in the shader)
-            if (count_ != buffer.count)
+			if (count_ != forces_buf.count)
             {
-				this.count_ = (uint)buffer.count;
+				this.count_ = (uint)forces_buf.count;
                 Vector2Int resolution = new ThreadSize(this.count_, (uint)ThreadSize.x, (uint)ThreadSize.y).Resolution;
                 uint count = (uint)resolution.x * (uint)resolution.y;
                 this.UnitSize = new ThreadSize(count, (uint)ThreadSize.x, (uint)ThreadSize.y).UnitSize;
@@ -57,18 +56,19 @@ namespace Computils.Processors.Forces
 #if UNITY_EDITOR
                 // Update info in Unity editor for debugging...
 				this.ForcesCount = (int)count;
+				this.Res = resolution;
+				this.UnitRes = this.UnitSize;
 #endif
             }
 
-			// This method should be overwritten by child classes
-			this.Shader.SetBuffer(Kernel, ShaderProps.positions_buf, posBuf);
-			this.Shader.SetBuffer(Kernel, ShaderProps.forces_buf, buffer);
-			this.Shader.SetInt(ShaderProps.PositionsCount, posBuf.count);
+			this.Shader.SetBuffer(Kernel, ShaderProps.positions_buf, positions_buf);
+			this.Shader.SetBuffer(Kernel, ShaderProps.forces_buf, forces_buf);
+			this.Shader.SetInt(ShaderProps.PositionsCount, positions_buf.count);
 			this.Shader.SetFloat(ShaderProps.Strength, this.Strength);
             this.Shader.SetInt(ShaderProps.ResolutionX, this.ThreadSize.x * this.UnitSize.x);
 			this.Shader.SetBool(ShaderProps.Additive, this.Additive);
 			this.Shader.SetVector(ShaderProps.Origin, this.Origin);
-            this.Shader.Dispatch(Kernel, UnitSize.x, UnitSize.y, 1);         
+            this.Shader.Dispatch(Kernel, UnitSize.x, UnitSize.y, 1);
 		}
     }
 }
