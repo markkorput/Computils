@@ -1,0 +1,38 @@
+﻿#pragma kernel CSForceTo
+
+// #pragma target 4.0
+
+#define thread_group_size_x 2
+#define thread_group_size_y 2
+
+struct Position
+{
+    float3 pos;
+};
+
+struct Force
+{
+    float3 force;
+};
+
+RWStructuredBuffer<Position> positions_buf;
+RWStructuredBuffer<Force> forces_buf;
+
+int PositionsCount;
+float Strength;
+bool Additive;
+int ResolutionX;
+float3 Origin;
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSForceTo(uint3 id : SV_DispatchThreadID)
+{
+    const uint forceidx = id.x + id.y * ResolutionX;
+    uint posidx = forceidx;
+    if (posidx >= (uint)PositionsCount) return;
+
+    float3 forceDir = normalize(Origin - positions_buf[posidx].pos);
+    float3 force = forceDir * Strength;
+    if (Additive) force += forces_buf[forceidx].force;
+    forces_buf[forceidx].force = force;
+}
