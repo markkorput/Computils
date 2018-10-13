@@ -144,6 +144,22 @@ MonoBehaviour:
   LeftKey: 276
   RightKey: 275
   FastKey: 304
+--- !u!114 &126373602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 126373600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b8ca94a636949e9bb201e2833a6f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VertsBufFacade: {fileID: 1009611701}
+  RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
+  MeshTopology: 0
+  MainColor: {r: 1, g: 1, b: 0, a: 0.5882353}
+  VertCount: 0
 --- !u!1 &134599717
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,7 +284,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 743154080}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.04, z: 0}
+  m_LocalPosition: {x: 0, y: -1.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1520439711}
@@ -289,7 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Particles: {fileID: 1467028625}
   Line: {fileID: 1009611701}
-  ParticleIndices: 0a000000140000001e00000064000000f4010000
+  ParticleIndices: 01000000020000000300000004000000050000000600000007000000080000000900000064000000c80000002c0100006e000000dc0000004a010000940200000203000070030000e7030000780300000903000065000000ca0000002f010000db0300008e02000041010000
   PickerRunner:
     Shader: {fileID: 7200000, guid: 58f44541ac10c4a20a1076b0476144f1, type: 3}
     ForcesCount: 0
