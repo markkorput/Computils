@@ -6,6 +6,14 @@ namespace Computils.Populators
 {
 	public class Utils
 	{      
+
+		public static ComputeBuffer Create(uint[] data)
+        {
+            ComputeBuffer buffer = new ComputeBuffer(data.Length, sizeof(uint));
+            buffer.SetData(data);
+            return buffer;
+        }
+      
         public static ComputeBuffer Create(float[] data)
         {
             ComputeBuffer buffer = new ComputeBuffer(data.Length, sizeof(float));
@@ -45,6 +53,26 @@ namespace Computils.Populators
 
             }
             
+            return Create(data);
+        }
+
+		public static ComputeBuffer UpdateOrCreate(ComputeBuffer buf, uint[] data)
+        {
+            int count = data.Length;
+
+            if (buf != null && buf.count == count)
+            {
+                buf.SetData(data);
+                return buf;
+            }
+
+            if (buf != null)
+            {
+                buf.Release();
+                buf.Dispose();
+
+            }
+
             return Create(data);
         }
 	} 
