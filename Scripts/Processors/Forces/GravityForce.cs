@@ -22,7 +22,8 @@ namespace Computils.Processors.Forces
 			public const string Origin = "Origin";
 		}
 
-		public ComputeShader Shader;      
+		public ComputeShader Shader;
+		public Transform OriginTransform;
 		public Vector3 Origin;
 		public float Strength = 9.81f;
 		public float MinDistance = 0.1f;
@@ -32,10 +33,10 @@ namespace Computils.Processors.Forces
         private Vector2Int ThreadSize = new Vector2Int(4, 4);
         private uint count_ = 0;
         private Vector2Int UnitSize;
-
+      
 #if UNITY_EDITOR
         [Header("Read-Only")]
-        public int ForcesCount = 0;
+        public int Count = 0;
 		public Vector2 Res;
 		public Vector2 UnitRes;
 #endif
@@ -47,6 +48,8 @@ namespace Computils.Processors.Forces
 
 		override public void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf)
         {
+			if (OriginTransform != null) this.Origin = OriginTransform.position;
+         
 			// Update our UnitSize to match the number of verts in our vertBuf
             // (when multiplied with ThreadSize, which should match the values in the shader)
 			if (count_ != forces_buf.count)
@@ -58,12 +61,12 @@ namespace Computils.Processors.Forces
 
 #if UNITY_EDITOR
                 // Update info in Unity editor for debugging...
-				this.ForcesCount = (int)count;
+				this.Count = (int)count;
 				this.Res = resolution;
 				this.UnitRes = this.UnitSize;
 #endif
             }
-         
+
 			this.Shader.SetBuffer(Kernel, ShaderProps.positions_buf, positions_buf);
 			this.Shader.SetBuffer(Kernel, ShaderProps.forces_buf, forces_buf);
 			this.Shader.SetInt(ShaderProps.PositionsCount, positions_buf.count);
