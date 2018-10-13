@@ -19,6 +19,8 @@ namespace Computils.Demos
 		public ComputeBufferFacade Line;
 		public int[] ParticleIndices;
 		public Processors.ShaderRunner PickerRunner;
+
+		public KeyCode RandomizeKey = KeyCode.R;
       
 		private ComputeBuffer indicesBuf;
       
@@ -33,6 +35,14 @@ namespace Computils.Demos
 			var line_buf = Line.GetValid();
 			var pos_buf = Particles.GetValid();
 			if (line_buf == null || pos_buf == null) return;
+
+			if (Input.GetKeyDown(this.RandomizeKey))
+            {
+				var rnd = new System.Random();
+				for (int i = 0; i < this.ParticleIndices.Length; i++) {
+					this.ParticleIndices[i] = rnd.Next(0, this.ParticleIndices.Length);
+				}
+            }
          
 			this.indicesBuf = Populators.Utils.UpdateOrCreate(this.indicesBuf, (from idx in ParticleIndices select (uint)idx).ToArray());
 			PickerRunner.Shader.SetBuffer(PickerRunner.Kernel, ShaderProps.IndicesBuf, this.indicesBuf);
