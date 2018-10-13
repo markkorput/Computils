@@ -1,4 +1,4 @@
-﻿#pragma kernel CSForceTo
+﻿#pragma kernel CSForce
 
 // #pragma target 4.0
 
@@ -19,31 +19,27 @@ RWStructuredBuffer<Position> positions_buf;
 RWStructuredBuffer<Force> forces_buf;
 
 int PositionsCount;
-float Strength;
-bool Additive;
 int ResolutionX;
+bool Additive;
 float3 Origin;
-float MinDistance;
+float Strength;
+float ZeroDist;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
-void CSForceTo(uint3 id : SV_DispatchThreadID)
+void CSForce(uint3 id : SV_DispatchThreadID)
 {
     const uint forceidx = id.x + id.y * ResolutionX;
     uint posidx = forceidx;
     if (posidx >= (uint)PositionsCount) return;
+    if (ZeroDist == 0.0) ZeroDist = 0.001;
 
     float3 pos = positions_buf[posidx].pos;
     float3 delta = Origin - pos;
     float dist = length(delta);
 
-    float3 forceDir = float3(-sin(id.x*0.313),-cos(id.y*0.213),-cos(id.x*id.y*0.0113));
-    if (dist < MinDistance) {
-        forceDir = normalize(forceDir);
-    } else {
-        forceDir = normalize(delta);
-    }
-
-    float3 force = forceDir * Strength;
+    float3 forceDir = float3(sin(id.x*0.313),cos(id.y*0.213),cos(id.x*id.y*0.0113));
+    if (dist > 0.0) forceDir = normalize(delta);
+    float3 force = forceDir * Strength * (1.0f - min(dist/ZeroDist, 1.0));
 
     if (Additive) force += forces_buf[forceidx].force;
     forces_buf[forceidx].force = force;

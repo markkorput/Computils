@@ -76,7 +76,7 @@ namespace Computils.Processors
 				this.UnitRes = this.UnitSize;
 #endif
             }
-
+         
             // This method should be overwritten by child classes
             this.Shader.SetBuffer(Kernel, ShaderProps.positions_buf, positions_buf);
             this.Shader.SetBuffer(Kernel, ShaderProps.forces_buf, forces_buf);         
