@@ -1,0 +1,32 @@
+﻿#pragma kernel CSFindNearest
+
+// #pragma target 4.0
+
+#define thread_group_size_x 4
+#define thread_group_size_y 4
+
+struct Position
+{
+    float3 pos;
+};
+
+RWStructuredBuffer<Position> positions_buf;
+RWStructuredBuffer<uint> index_feedback_buf;
+RWStructuredBuffer<float> distance_feedback_buf;
+
+int ResolutionX;
+float3 Pos;
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSFindNearest(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+
+    float3 pos = positions_buf[idx].pos;
+    float dist = length(pos - Pos);
+
+    if (dist < distance_feedback_buf[0] || distance_feedback_buf[0] < 0) {
+        index_feedback_buf[0] = idx;
+        distance_feedback_buf[0] = dist;
+    }
+}

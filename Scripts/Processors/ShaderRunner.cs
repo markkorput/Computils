@@ -10,7 +10,7 @@ namespace Computils.Processors
       
 #if UNITY_EDITOR
 		[Header("Read-Only")]
-		public int ForcesCount = 0;
+		public int Count = 0;
 		public Vector2 Res;
 		public Vector2 UnitRes;
 #endif
@@ -41,7 +41,7 @@ namespace Computils.Processors
 
 #if UNITY_EDITOR
                 // Update info in Unity editor for debugging...
-                this.ForcesCount = (int)count;
+                this.Count = (int)count;
                 this.Res = resolution;
                 this.UnitRes = this.unitSize_;
 #endif            
