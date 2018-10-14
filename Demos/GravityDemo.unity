@@ -185,11 +185,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Shader: {fileID: 7200000, guid: 17a2000101b8a4e69887047328252794, type: 3}
+  OriginTransform: {fileID: 0}
   Origin: {x: 0, y: 0, z: 0}
   Strength: 1
   MinDistance: 1
   Additive: 0
-  ForcesCount: 0
+  Count: 0
   Res: {x: 0, y: 0}
   UnitRes: {x: 0, y: 0}
 --- !u!1 &369161463
@@ -642,7 +643,7 @@ MonoBehaviour:
   Shader: {fileID: 7200000, guid: 8690b838eaf514855a8090a07ce1eec9, type: 3}
   OriginTransform: {fileID: 1402916191}
   Origin: {x: 0, y: 0, z: 0}
-  Strength: 5
+  Strength: 10
   Additive: 1
   ZeroDist: 3
   ForcesCount: 0
@@ -702,7 +703,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -30
+      value: -21.7
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalRotation.x
@@ -793,5 +794,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Translate1: {x: 0, y: 0, z: 0}
-  RotateEuler: {x: 0.7, y: 0.5, z: 0.3}
+  RotateEuler: {x: -1.56, y: 2.76, z: 2.03}
   Translate2: {x: 0, y: 0, z: 0}

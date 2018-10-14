@@ -9,7 +9,7 @@ namespace Computils {
 		[Header("Read-Only")]
 		public int Count = 0;
 #endif
-
+      
 #if UNITY_EDITOR
 		new public void Set(ComputeBuffer buf) {
 			base.Set(buf);

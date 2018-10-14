@@ -144,6 +144,22 @@ MonoBehaviour:
   LeftKey: 276
   RightKey: 275
   FastKey: 304
+--- !u!114 &126373602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 126373600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b8ca94a636949e9bb201e2833a6f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VertsBufFacade: {fileID: 651446784}
+  RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
+  MeshTopology: 4
+  MainColor: {r: 1, g: 0, b: 0, a: 0.3}
+  VertCount: 0
 --- !u!1 &134599717
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +194,7 @@ MonoBehaviour:
   BoxTranform: {fileID: 134599719}
   Runner:
     Shader: {fileID: 7200000, guid: 2611d078a6834445c91e3643f5e8f513, type: 3}
-    ForcesCount: 0
+    Count: 0
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
 --- !u!4 &134599719
@@ -237,7 +253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Runner:
     Shader: {fileID: 7200000, guid: c1af89f5e770e4826aa6a7133841a527, type: 3}
-    ForcesCount: 0
+    Count: 0
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
   FromTransform: {fileID: 0}
@@ -245,6 +261,99 @@ MonoBehaviour:
   Force: {x: 0, y: -8, z: 0}
   MaxVariation: 0.1
   Additive: 0
+--- !u!1 &651446783
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 651446787}
+  - component: {fileID: 651446786}
+  - component: {fileID: 651446785}
+  - component: {fileID: 651446784}
+  m_Layer: 0
+  m_Name: Tracer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &651446784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 651446783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93416beb1f4e4481db798e446d66f4eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SetEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  ChangeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  Count: 0
+--- !u!114 &651446785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 651446783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1501633beecb344a6840bdbb46cda8ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Particles: {fileID: 1467028625}
+  Trace: {fileID: 651446784}
+  FindNearest: {fileID: 651446786}
+  TracePosTransform: {fileID: 651446787}
+  TracePos: {x: 0, y: 0, z: 0}
+  MaxLength: 15
+  NextKey: 110
+--- !u!114 &651446786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 651446783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04fb88bc6111c4c3ba439ab0e6f8607e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Runner:
+    Shader: {fileID: 7200000, guid: e1f0e2607267447f889fb8e2cca8ef9b, type: 3}
+    Count: 0
+    Res: {x: 0, y: 0}
+    UnitRes: {x: 0, y: 0}
+  Particles: {fileID: 1467028625}
+  PositionTransform: {fileID: 0}
+  Pos: {x: 0, y: 0, z: 0}
+  ClosestIdx: -1
+  ClosestDist: 0
+--- !u!4 &651446787
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 651446783}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 735903950}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &735903949
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +382,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
-  m_Father: {fileID: 953547088}
+  m_Father: {fileID: 651446787}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &735903951
@@ -481,57 +590,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 788216993}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &953547086
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 953547088}
-  - component: {fileID: 953547087}
-  m_Layer: 0
-  m_Name: FindNearest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &953547087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 953547086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04fb88bc6111c4c3ba439ab0e6f8607e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Particles: {fileID: 1467028625}
-  PositionTransform: {fileID: 953547088}
-  Pos: {x: 0, y: 0, z: 0}
-  Runner:
-    Shader: {fileID: 7200000, guid: e1f0e2607267447f889fb8e2cca8ef9b, type: 3}
-    ForcesCount: 0
-    Res: {x: 0, y: 0}
-    UnitRes: {x: 0, y: 0}
-  ClosestIdx: -1
-  ClosestDist: 0
---- !u!4 &953547088
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 953547086}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 735903950}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1081871659
 Prefab:
   m_ObjectHideFlags: 0

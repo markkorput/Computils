@@ -10,9 +10,14 @@ struct Position
     float3 pos;
 };
 
+struct Dist {
+    float dist;
+    float3 pos;
+};
+
 RWStructuredBuffer<Position> positions_buf;
 RWStructuredBuffer<uint> index_feedback_buf;
-RWStructuredBuffer<float> distance_feedback_buf;
+RWStructuredBuffer<Dist> distance_feedback_buf;
 
 int ResolutionX;
 float3 Pos;
@@ -25,8 +30,9 @@ void CSFindNearest(uint3 id : SV_DispatchThreadID)
     float3 pos = positions_buf[idx].pos;
     float dist = length(pos - Pos);
 
-    if (dist < distance_feedback_buf[0] || distance_feedback_buf[0] < 0) {
+    if (dist < distance_feedback_buf[0].dist || distance_feedback_buf[0].dist < 0) {
         index_feedback_buf[0] = idx;
-        distance_feedback_buf[0] = dist;
+        distance_feedback_buf[0].dist = dist;
+        distance_feedback_buf[0].pos = pos;
     }
 }
