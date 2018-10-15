@@ -189,8 +189,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 134599717}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 5, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 788216994}
   m_Father: {fileID: 0}
@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 165580324}
   - component: {fileID: 165580325}
   m_Layer: 0
-  m_Name: Gravity
+  m_Name: Y-Force
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -223,7 +223,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1081871661}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &165580325
 MonoBehaviour:
@@ -233,18 +233,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 165580323}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8788d9eb5b13e41b28b596fbe672b0fa, type: 3}
+  m_Script: {fileID: 11500000, guid: a4ae16489636e423ba9d8e509591199f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shader: {fileID: 7200000, guid: 17a2000101b8a4e69887047328252794, type: 3}
-  OriginTransform: {fileID: 165580324}
-  Origin: {x: 0, y: 0, z: 0}
-  Strength: -0.5
-  MinDistance: 0
+  Runner:
+    Shader: {fileID: 7200000, guid: c1af89f5e770e4826aa6a7133841a527, type: 3}
+    Count: 0
+    Res: {x: 0, y: 0}
+    UnitRes: {x: 0, y: 0}
+  FromTransform: {fileID: 0}
+  ToTransform: {fileID: 0}
+  Force: {x: 0, y: -0.5, z: 0}
+  MaxVariation: 0.1
   Additive: 0
-  Count: 0
-  Res: {x: 0, y: 0}
-  UnitRes: {x: 0, y: 0}
 --- !u!1 &470283636
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +256,7 @@ GameObject:
   - component: {fileID: 470283638}
   - component: {fileID: 470283637}
   m_Layer: 0
-  m_Name: Constant
+  m_Name: X-force
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -483,7 +484,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4831882146250164, guid: b238bd9f039b44207852b4b3551a7340, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1494394149996244, guid: b238bd9f039b44207852b4b3551a7340, type: 2}
       propertyPath: m_Name
@@ -492,7 +493,11 @@ Prefab:
     - target: {fileID: 114509077793171994, guid: b238bd9f039b44207852b4b3551a7340,
         type: 2}
       propertyPath: Amount
-      value: 30000
+      value: 90000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494394149996244, guid: b238bd9f039b44207852b4b3551a7340, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b238bd9f039b44207852b4b3551a7340, type: 2}
@@ -527,6 +532,7 @@ MonoBehaviour:
   PositionsFacade: {fileID: 1467028625}
   Forces:
   - {fileID: 165580325}
+  ForceFactors: {fileID: 0}
   ToggleKey: 102
 --- !u!114 &1081871663 stripped
 MonoBehaviour:
@@ -563,7 +569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Facade: {fileID: 1082088066}
-  Amount: 30000
+  Amount: 90000
   StartMinValue: -3
   StartMaxValue: 0
 --- !u!114 &1082088066
@@ -599,7 +605,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1093756325
 Prefab:
@@ -638,16 +644,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4831882146250164, guid: b238bd9f039b44207852b4b3551a7340, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1494394149996244, guid: b238bd9f039b44207852b4b3551a7340, type: 2}
       propertyPath: m_Name
-      value: SelectionForcesBuffer
+      value: FactoredForcesBuffer
       objectReference: {fileID: 0}
     - target: {fileID: 114509077793171994, guid: b238bd9f039b44207852b4b3551a7340,
         type: 2}
       propertyPath: Amount
-      value: 30000
+      value: 90000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b238bd9f039b44207852b4b3551a7340, type: 2}
@@ -688,6 +694,7 @@ MonoBehaviour:
   PositionsFacade: {fileID: 1467028625}
   Forces:
   - {fileID: 470283637}
+  ForceFactors: {fileID: 1482513305}
   ToggleKey: 102
 --- !u!1 &1285023770
 GameObject:
@@ -719,7 +726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Facade: {fileID: 1467028625}
-  Amount: 30000
+  Amount: 90000
   StartValue: {x: 0, y: 0, z: 0}
 --- !u!4 &1285023772
 Transform:
@@ -735,91 +742,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1301003061
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1301003062}
-  - component: {fileID: 1301003065}
-  - component: {fileID: 1301003064}
-  - component: {fileID: 1301003063}
-  m_Layer: 0
-  m_Name: OriginSphere
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1301003062
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1301003061}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
-  m_Children: []
-  m_Father: {fileID: 1081871661}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &1301003063
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1301003061}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &1301003064
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1301003061}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!33 &1301003065
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1301003061}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &1467028625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -855,7 +777,7 @@ GameObject:
   - component: {fileID: 1482513306}
   - component: {fileID: 1482513304}
   m_Layer: 0
-  m_Name: SelectFactorsBuffer
+  m_Name: FactorsBuffer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -872,7 +794,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1482513304
 MonoBehaviour:
@@ -892,7 +814,7 @@ MonoBehaviour:
     UnitRes: {x: 0, y: 0}
   Positions: {fileID: 1467028625}
   Factors: {fileID: 1482513305}
-  Interval: {x: 0, y: 0.5, z: 0}
+  Interval: {x: 0, y: 0.2, z: 0}
 --- !u!114 &1482513305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -927,7 +849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Facade: {fileID: 1482513305}
-  Amount: 30000
+  Amount: 90000
   StartMinValue: 0
   StartMaxValue: 0
 --- !u!1001 &1855721845

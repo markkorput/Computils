@@ -14,9 +14,9 @@ void CSLoadSelectFactors (uint3 id : SV_DispatchThreadID)
 
     float3 pos = positions_buf[idx];
 
-    float factor = Interval.x == 0.0 ? 1.0 : (float)(pos.x % Interval.x) % 2;
-    factor *= Interval.y == 0.0 ? 1.0 : (float)(pos.y % Interval.y) % 2;
-    factor *= Interval.z == 0.0 ? 1.0 : (float)(pos.z % Interval.z) % 2;
+    float factor = (Interval.x == 0.0 ? 1.0 : floor(pos.x / Interval.x) % 2);
+    factor *= (Interval.y == 0.0 ? 1.0 : floor(pos.y / Interval.y) % 2);
+    factor *= (Interval.z == 0.0 ? 1.0 : floor(pos.z / Interval.z) % 2);
 
     factors_buf[idx] = factor;
 }

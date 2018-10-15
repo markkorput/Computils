@@ -17,13 +17,17 @@ struct Force
 
 RWStructuredBuffer<Position> positions_buf;
 RWStructuredBuffer<Force> forces_buf;
+RWStructuredBuffer<float> factors_buf;
 
 int ResolutionX;
 float DeltaTime;
+bool UseFactors;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSForces(uint3 id : SV_DispatchThreadID)
 {
     const uint idx = id.x + id.y * ResolutionX;
-    positions_buf[idx].pos += forces_buf[idx].force * DeltaTime;
+    float3 delta = forces_buf[idx].force * DeltaTime;
+    if (UseFactors) delta *= factors_buf[idx];
+    positions_buf[idx].pos += delta;
 }

@@ -10,15 +10,19 @@ namespace Computils.Processors
 			public const string Kernel = "CSForces";
 			public const string positions_buf = "positions_buf";
 			public const string forces_buf = "forces_buf";
+			public const string factors_buf = "factors_buf";
 			public const string ResolutionX = "ResolutionX";
 			public const string DeltaTime = "DeltaTime";
+			public const string UseFactors = "UseFactors";
 		}
 
 		public ShaderRunner Runner;
 		public ComputeBufferFacade ForcesFacade;
 		public ComputeBufferFacade PositionsFacade;
 		public Forces.Force[] Forces;
-      
+		[Tooltip("Optional; should point to a buffer with single float values with a normalised (0.0-1.0) factor for each position which act a multiplier for how much the forces affect the positions")]
+		public ComputeBufferFacade ForceFactors;
+
 		public KeyCode ToggleKey = KeyCode.None;
 
 		private bool toggleActive = true;
@@ -46,15 +50,22 @@ namespace Computils.Processors
 						force.Apply(forces_buf, positions_buf);
 					}
 
-					this.Apply(forces_buf, positions_buf);               
+					this.Apply(forces_buf, positions_buf, this.ForceFactors == null ? null : this.ForceFactors.GetValid());
                 }            
 			}
 		}
-
-		public void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf)
+      
+		public void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf, ComputeBuffer factors_buf = null)
         {
 			this.Runner.Shader.SetFloat(ShaderProps.DeltaTime, Time.deltaTime);
 			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.forces_buf, forces_buf);
+         
+			bool useFactors = factors_buf != null;
+			this.Runner.Shader.SetBool(ShaderProps.UseFactors, useFactors);
+
+			if (useFactors) this.Runner.Shader.SetBuffer(
+				this.Runner.Kernel, ShaderProps.factors_buf, factors_buf);
+         
 			this.Runner.Run(positions_buf, ShaderProps.positions_buf);
 		}
 
