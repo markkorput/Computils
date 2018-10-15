@@ -338,7 +338,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fb88bc6111c4c3ba439ab0e6f8607e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Runner:
+  CalcRunner:
+    Shader: {fileID: 7200000, guid: e1f0e2607267447f889fb8e2cca8ef9b, type: 3}
+    Count: 0
+    Res: {x: 0, y: 0}
+    UnitRes: {x: 0, y: 0}
+  FindRunner:
     Shader: {fileID: 7200000, guid: e1f0e2607267447f889fb8e2cca8ef9b, type: 3}
     Count: 0
     Res: {x: 0, y: 0}
@@ -349,6 +354,7 @@ MonoBehaviour:
   ClosestIdx: -1
   ClosestDist: 0
   ClosestPos: {x: 0, y: 0, z: 0}
+  ConsideredCount: 0
 --- !u!4 &651446787
 Transform:
   m_ObjectHideFlags: 0

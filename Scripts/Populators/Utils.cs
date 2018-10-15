@@ -13,7 +13,7 @@ namespace Computils.Populators
             buffer.SetData(data);
             return buffer;
         }
-      
+
         public static ComputeBuffer Create(float[] data)
         {
             ComputeBuffer buffer = new ComputeBuffer(data.Length, sizeof(float));
@@ -59,7 +59,7 @@ namespace Computils.Populators
 		public static ComputeBuffer UpdateOrCreate(ComputeBuffer buf, uint[] data)
         {
             int count = data.Length;
-
+         
             if (buf != null && buf.count == count)
             {
                 buf.SetData(data);

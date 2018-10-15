@@ -25,10 +25,11 @@ namespace Computils.Processors
 		public string NameResolutionX { get { return resx_; } set { resx_ = value; }}
       
 		public void Setup(string kernelName, uint threadsX, uint threadsY) {
-			this.kernel_ = this.Shader.FindKernel(kernelName);
+			
 			this.threadSize_ = new Vector2Int((int)threadsX, (int)threadsY);
+			this.kernel_ = this.Shader.FindKernel(kernelName);
 		}
-      
+
 		public void Run(ComputeBuffer buf, string bufName)
 		{
 			// update our thread count/unity size/total resolution values if necessary

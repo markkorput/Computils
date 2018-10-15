@@ -1,4 +1,5 @@
-﻿#pragma kernel CSFindNearest
+﻿#pragma kernel CSCalcDists
+#pragma kernel CSFindNearest
 
 // #pragma target 4.0
 
@@ -13,32 +14,45 @@ struct Position
 struct Dist {
     float dist;
     float3 pos;
+    float count;
 };
 
 RWStructuredBuffer<Position> positions_buf;
 RWStructuredBuffer<uint> index_feedback_buf;
-// RWStructuredBuffer<uint> blacklist_buf;
-RWStructuredBuffer<Dist> distance_feedback_buf;
+RWStructuredBuffer<float> distances_buf;
+RWStructuredBuffer<uint> blacklist_buf;
+RWStructuredBuffer<Dist> feedback_buf;
 
 int ResolutionX;
-//int BlacklistLength;
+int BlacklistLength;
 float3 Pos;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSCalcDists(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+
+    float3 delta = positions_buf[idx].pos - Pos;
+    distances_buf[idx] = length(delta);
+}
+
+[numthreads (1, 1, 1)]
 void CSFindNearest(uint3 id : SV_DispatchThreadID)
 {
     const uint idx = id.x + id.y * ResolutionX;
 
     // when blacklisted, don't consider
-    //for(int i=0; i<BlacklistLength; i++)
-    //    if (blacklist_buf[i] == idx) return;
+    //(int i=0; i<BlacklistLength; i++)
+    //    if (blacklist_buf[i] == idx)
+     //       return;
 
-    float3 pos = positions_buf[idx].pos;
-    float dist = length(pos - Pos);
+    float dist = distances_buf[idx];
+    float closestdist = feedback_buf[0].dist;
 
-    if (dist < distance_feedback_buf[0].dist || distance_feedback_buf[0].dist < 0) {
+    //if (dist < closestdist) {
         index_feedback_buf[0] = idx;
-        distance_feedback_buf[0].dist = dist;
-        distance_feedback_buf[0].pos = pos;
-    }
+        feedback_buf[0].dist = dist;
+        feedback_buf[0].pos = positions_buf[idx].pos;
+        feedback_buf[0].count += 1.0;
+    //}
 }
