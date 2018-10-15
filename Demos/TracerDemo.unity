@@ -158,8 +158,8 @@ MonoBehaviour:
   VertsBufFacade: {fileID: 651446784}
   RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
   MeshTopology: 4
-  MainColor: {r: 1, g: 0, b: 0, a: 1}
-  VertCount: 0
+  MainColor: {r: 1, g: 1, b: 0.5882353, a: 0.78431374}
+  VertCount: 50
 --- !u!1 &134599717
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,9 +321,11 @@ MonoBehaviour:
   TracePosTransform: {fileID: 651446787}
   TracePos: {x: 0, y: 0, z: 0}
   RealtimePositions: 0
-  MaxLength: 50
+  AutoGrow: 0
+  MaxLength: 25
   NextKey: 110
   ClearKey: 99
+  ResetKey: 114
   DebugInfo:
     CurLength: 0
     Points: []
@@ -857,31 +859,31 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 19.6
+      value: 21.98529
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.2
+      value: 0.17297186
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -72.5
+      value: -36.554405
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0.10988091
+      value: -0.068053946
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalRotation.y
-      value: -0.13754092
+      value: 0.26203606
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0.015354765
+      value: -0.0185278
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 0.98426265
+      value: -0.96247727
       objectReference: {fileID: 0}
     - target: {fileID: 4095518978004060, guid: 1f3a935f5d59643c4ae2474f61e5692f, type: 2}
       propertyPath: m_RootOrder

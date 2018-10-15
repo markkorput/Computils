@@ -22,17 +22,19 @@ namespace Computils.Demos
 		public Transform TracePosTransform;
 		public Vector3 TracePos;
 		public bool RealtimePositions = false;
+		public bool AutoGrow = false;
       
 		public int MaxLength = 10;
 		public KeyCode NextKey = KeyCode.N;
 		public KeyCode ClearKey = KeyCode.C;
+		public KeyCode ResetKey = KeyCode.R;
 
 		private uint curLength = 0;
 		private ComputeBuffer TraceBuffer;
       
 		private TracePoint[] TracePoints;
 		private bool ReadyForNext = false;
-
+        
 #if UNITY_EDITOR
         [System.Serializable]
 		public class Dinfo {
@@ -46,8 +48,9 @@ namespace Computils.Demos
 		private void Update()
 		{
 			// process input         
-			if (Input.GetKeyDown(ClearKey)) this.Clear();
-			if (Input.GetKeyDown(NextKey)) ReadyForNext = true;
+			if (Input.GetKeyDown(ClearKey)) { this.Clear(); this.AutoGrow = false; }
+			if (Input.GetKeyDown(ResetKey)) { this.Clear(); this.AutoGrow = true; }
+			if (Input.GetKeyDown(NextKey) || AutoGrow) ReadyForNext = true;
          
 			// (re-)initialize if necessary
 			if (TraceBuffer == null || TraceBuffer.count != MaxLength) Init((uint)this.MaxLength);

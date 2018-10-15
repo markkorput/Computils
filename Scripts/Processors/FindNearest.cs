@@ -98,12 +98,11 @@ namespace Computils.Processors
 			this.ClosestIdx = (int)nearest.index;
 			this.ClosestDist = nearest.distance;
 			this.ClosestPos = nearest.pos;
-            // this.ConsideredCount = nearest
 #endif
 
 			return nearest;
 		}
-
+      
 		private NearestItem GetNearestCPU(ComputeBuffer positionsBuf, ComputeBuffer distancesBuf, uint[] blacklistIndices = null) {         
 			if (distsList.Length != distancesBuf.count) distsList = new float[distancesBuf.count];
 			List<uint> bList = new List<uint>(blacklistIndices == null ? new uint[0] : blacklistIndices);
@@ -137,7 +136,8 @@ namespace Computils.Processors
 		}
 
 		private NearestItem GetNearestGPU(ComputeBuffer buf, uint[] blacklistIndices = null) {
-            distanceFeedbackBuf = Populators.Utils.UpdateOrCreate(this.distanceFeedbackBuf, new float[] { 9999.0f, 0.0f, 0.0f, 0.0f, 0.0f });
+			// 0 = distance, 1 = pos.x, 2 = pos.y, 3 = pos.z, 4 = considered count
+			distanceFeedbackBuf = Populators.Utils.UpdateOrCreate(this.distanceFeedbackBuf, new float[] { 9999.0f, 0.0f, 0.0f, 0.0f, 0.0f }); 
             indexFeedbackBuf = Populators.Utils.UpdateOrCreate(this.indexFeedbackBuf, new uint[] { 0 });
 
             // blacklist
@@ -160,9 +160,9 @@ namespace Computils.Processors
             // fetch results
             uint[] indexes = new uint[1];
             indexFeedbackBuf.GetData(indexes);
-            float[] distInfo = new float[5];
+			float[] distInfo = new float[5]; // 0 = distance, 1 = pos.x, 2 = pos.y, 3 = pos.z, 4 = considered count         
             distanceFeedbackBuf.GetData(distInfo);
-
+         
 #if UNITY_EDITOR
 			this.ConsideredCount = distInfo[4];
 #endif
