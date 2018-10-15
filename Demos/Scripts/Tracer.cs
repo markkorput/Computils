@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Computils.Demos
 {
@@ -23,34 +24,44 @@ namespace Computils.Demos
 		public Vector3 TracePos;
 		public bool RealtimePositions = false;
 		public bool AutoGrow = false;
-      
+		public bool AutoReset = false;
+
 		public int MaxLength = 10;
+
+        [Header("Key Input")]
 		public KeyCode NextKey = KeyCode.N;
 		public KeyCode ClearKey = KeyCode.C;
 		public KeyCode ResetKey = KeyCode.R;
+		public KeyCode AutoKey = KeyCode.A;
+
+		[Header("Events")]
+		public UnityEvent MaxLengthEvent;
 
 		private uint curLength = 0;
 		private ComputeBuffer TraceBuffer;
       
 		private TracePoint[] TracePoints;
 		private bool ReadyForNext = false;
-        
+
 #if UNITY_EDITOR
         [System.Serializable]
 		public class Dinfo {
 			public int CurLength = 0;
 			public TracePoint[] Points;
+			public int ClearCount = 0;
 		}
 
 		public Dinfo DebugInfo = new Dinfo();
 #endif      
-
+      
 		private void Update()
 		{
 			// process input         
 			if (Input.GetKeyDown(ClearKey)) { this.Clear(); this.AutoGrow = false; }
 			if (Input.GetKeyDown(ResetKey)) { this.Clear(); this.AutoGrow = true; }
-			if (Input.GetKeyDown(NextKey) || AutoGrow) ReadyForNext = true;
+			if (Input.GetKeyDown(AutoKey)) { this.AutoReset = !this.AutoReset; }
+			if (Input.GetKeyDown(NextKey) || AutoGrow) ReadyForNext = true;         
+			if (this.AutoReset && curLength == MaxLength) this.Clear();
          
 			// (re-)initialize if necessary
 			if (TraceBuffer == null || TraceBuffer.count != MaxLength) Init((uint)this.MaxLength);
@@ -67,23 +78,23 @@ namespace Computils.Demos
             {
                 // grab all realtime positions by index from the particles buffer
                 this.IndexPicker.Pick(this.Particles.Get(), this.TraceBuffer, (from p in TracePoints select p.index).ToArray());
-            }         
+            }
 		}
-      
+
 		private void AppendNext()
 		{
 			if (curLength == 0 && TracePosTransform != null) this.TracePos = this.TracePosTransform.position;
-         
+
 			// find closest
 			TracePoint closest = GetNearest(this.TracePos);
 			if (closest == null) return;
-         
+
 			TracePoints[curLength] = closest;
-         
+
 			// move TracePos "forward"
 			//Vector3 prevpos = curLength == 0 ? TracePos : TracePoints[curLength - 1].pos;
 			this.TracePos = this.TracePos = closest.pos; //closest.pos + (closest.pos - prev);
-         
+
 			// update all "following" points
 			curLength += 1;
 			for (uint i = curLength; i < TracePoints.Length; i++)
@@ -98,11 +109,15 @@ namespace Computils.Demos
 				Vector3[] positions = (from p in TracePoints select p.pos).ToArray();
 				TraceBuffer.SetData(positions);
 			}
-         
+
 #if UNITY_EDITOR
 			this.DebugInfo.CurLength = (int)this.curLength;
 			this.DebugInfo.Points = this.TracePoints;
-#endif         
+#endif
+			if (curLength == MaxLength)
+			{
+				this.MaxLengthEvent.Invoke();            
+			}
 		}
 
 		private TracePoint GetNearest(Vector3 pos) {
@@ -129,17 +144,23 @@ namespace Computils.Demos
 			TracePoints = new TracePoint[MaxLength];
 			for (int i = 0; i < MaxLength; i++) TracePoints[i] = new TracePoint(0, new Vector3(0, 0, 0));
 		}
-      
-		private void Clear() {
-			for (uint i = 0; i < this.MaxLength; i++) {
+
+		private void Clear()
+		{
+			for (uint i = 0; i < this.MaxLength; i++)
+			{
 				TracePoints[i].pos = this.TracePos;
 				TracePoints[i].index = 0;
 			}
-         
+
 			Vector3[] positions = (from p in TracePoints select p.pos).ToArray();
-            TraceBuffer.SetData(positions);
-         
+			TraceBuffer.SetData(positions);
+
 			this.curLength = 0;
+
+#if UNITY_EDITOR
+			this.DebugInfo.ClearCount++;
+#endif
 		}
 	}
 }
