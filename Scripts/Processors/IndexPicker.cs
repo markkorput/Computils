@@ -20,7 +20,7 @@ namespace Computils.Processors
 		public ComputeBufferFacade Particles;
 		public ComputeBufferFacade Line;
 		public int[] ParticleIndices;
-		public Processors.ShaderRunner PickerRunner;
+		public ShaderRunner PickerRunner;
 
 		public KeyCode RandomizeKey = KeyCode.R;
 

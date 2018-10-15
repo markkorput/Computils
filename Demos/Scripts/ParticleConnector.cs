@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace Computils.Demos
 {
 	public class ParticleConnector : MonoBehaviour
@@ -18,7 +19,7 @@ namespace Computils.Demos
 		public ComputeBufferFacade Particles;
 		public ComputeBufferFacade Line;
 		public int[] ParticleIndices;
-		public Processors.ShaderRunner PickerRunner;
+		public ShaderRunner PickerRunner;
 
 		public KeyCode RandomizeKey = KeyCode.R;
       

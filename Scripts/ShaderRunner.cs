@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Computils.Processors
+namespace Computils
 {
 	[System.Serializable]
 	public class ShaderRunner
