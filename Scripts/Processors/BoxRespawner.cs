@@ -26,6 +26,9 @@ namespace Computils.Processors
       
 		public ShaderRunner Runner;
 
+		public KeyCode ToggleKey = KeyCode.None;
+		private bool toggleActive = true;
+      
 		void Start()
 		{
 			Runner.Setup(ShaderProps.Kernel, 4, 4);
@@ -34,6 +37,7 @@ namespace Computils.Processors
       
 		void Update()
 		{
+			if (!toggleActive) return;
 			var birthsBuf = BirthTimes.GetValid();
 			var particlesBuf = Particles.GetValid();
 			if (birthsBuf == null || particlesBuf == null) return;
@@ -48,5 +52,16 @@ namespace Computils.Processors
             // run
 			this.Runner.Run(particlesBuf, ShaderProps.ParticlesBuffer);
 		}
+
+		private void OnGUI()
+        {
+            Event evt = Event.current;
+            if (evt.isKey && Input.GetKeyDown(evt.keyCode)) this.OnKeyDown(evt);
+        }
+
+        private void OnKeyDown(Event evt)
+        {
+            if (evt.keyCode == this.ToggleKey) this.toggleActive = !this.toggleActive;
+        }
 	}
 }

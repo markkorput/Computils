@@ -19,6 +19,9 @@ namespace Computils.Processors
 		public ComputeShader Shader;
 		public Forces.Force[] Forces;
 
+		public KeyCode ToggleKey = KeyCode.None;
+
+		private bool toggleActive = true;
 		private int Kernel;
         private Vector2Int ThreadSize = new Vector2Int(4, 4);
         private uint count_ = 0;
@@ -35,9 +38,10 @@ namespace Computils.Processors
         {
             this.Kernel = this.Shader.FindKernel(ShaderProps.Kernel);
         }
-      
-        void Update()
+
+		void Update()
         {
+			if (!toggleActive) return;
 			var forces_buf = ForcesFacade.GetValid();
 			var positions_buf = PositionsFacade.GetValid();
 
@@ -84,5 +88,16 @@ namespace Computils.Processors
 			this.Shader.SetFloat(ShaderProps.DeltaTime, Time.deltaTime);
             this.Shader.Dispatch(Kernel, UnitSize.x, UnitSize.y, 1);     
 		}
+
+		private void OnGUI()
+        {
+            Event evt = Event.current;
+            if (evt.isKey && Input.GetKeyDown(evt.keyCode)) this.OnKeyDown(evt);
+        }
+
+        private void OnKeyDown(Event evt)
+        {
+			if (evt.keyCode == this.ToggleKey) this.toggleActive = !this.toggleActive;
+        }
     }
 }

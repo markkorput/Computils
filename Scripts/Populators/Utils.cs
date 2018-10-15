@@ -80,20 +80,17 @@ namespace Computils.Populators
         {
             int count = data.Length;
 
-            if (buf != null && buf.count == count)
-            {
-                buf.SetData(data);
-                return buf;
-            }
-         
-            if (buf != null)
+			if (buf == null) return Create(data);
+
+			if (buf.count != count || buf.stride != sizeof(float))
             {
                 buf.Release();
                 buf.Dispose();
-
+				return Create(data);
             }
 
-            return Create(data);
+			buf.SetData(data);
+			return buf;
         }
 	} 
 }

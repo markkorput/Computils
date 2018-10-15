@@ -17,15 +17,21 @@ struct Dist {
 
 RWStructuredBuffer<Position> positions_buf;
 RWStructuredBuffer<uint> index_feedback_buf;
+// RWStructuredBuffer<uint> blacklist_buf;
 RWStructuredBuffer<Dist> distance_feedback_buf;
 
 int ResolutionX;
+//int BlacklistLength;
 float3 Pos;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSFindNearest(uint3 id : SV_DispatchThreadID)
 {
     const uint idx = id.x + id.y * ResolutionX;
+
+    // when blacklisted, don't consider
+    //for(int i=0; i<BlacklistLength; i++)
+    //    if (blacklist_buf[i] == idx) return;
 
     float3 pos = positions_buf[idx].pos;
     float dist = length(pos - Pos);

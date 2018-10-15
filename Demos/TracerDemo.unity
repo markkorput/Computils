@@ -158,7 +158,7 @@ MonoBehaviour:
   VertsBufFacade: {fileID: 651446784}
   RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
   MeshTopology: 4
-  MainColor: {r: 1, g: 0, b: 0, a: 0.3}
+  MainColor: {r: 1, g: 0, b: 0, a: 1}
   VertCount: 0
 --- !u!1 &134599717
 GameObject:
@@ -197,6 +197,7 @@ MonoBehaviour:
     Count: 0
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
+  ToggleKey: 102
 --- !u!4 &134599719
 Transform:
   m_ObjectHideFlags: 0
@@ -269,9 +270,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 651446787}
-  - component: {fileID: 651446786}
-  - component: {fileID: 651446785}
   - component: {fileID: 651446784}
+  - component: {fileID: 651446785}
+  - component: {fileID: 651446786}
+  - component: {fileID: 651446788}
   m_Layer: 0
   m_Name: Tracer
   m_TagString: Untagged
@@ -315,17 +317,23 @@ MonoBehaviour:
   Particles: {fileID: 1467028625}
   Trace: {fileID: 651446784}
   FindNearest: {fileID: 651446786}
+  IndexPicker: {fileID: 651446788}
   TracePosTransform: {fileID: 651446787}
   TracePos: {x: 0, y: 0, z: 0}
-  MaxLength: 15
+  RealtimePositions: 0
+  MaxLength: 50
   NextKey: 110
+  ClearKey: 99
+  DebugInfo:
+    CurLength: 0
+    Points: []
 --- !u!114 &651446786
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 651446783}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04fb88bc6111c4c3ba439ab0e6f8607e, type: 3}
   m_Name: 
@@ -335,11 +343,12 @@ MonoBehaviour:
     Count: 0
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
-  Particles: {fileID: 1467028625}
+  Particles: {fileID: 0}
   PositionTransform: {fileID: 0}
   Pos: {x: 0, y: 0, z: 0}
   ClosestIdx: -1
   ClosestDist: 0
+  ClosestPos: {x: 0, y: 0, z: 0}
 --- !u!4 &651446787
 Transform:
   m_ObjectHideFlags: 0
@@ -354,6 +363,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &651446788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 651446783}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c9b396dc99d14b86aa18b71cb604cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Particles: {fileID: 0}
+  Line: {fileID: 0}
+  ParticleIndices: 
+  PickerRunner:
+    Shader: {fileID: 7200000, guid: 58f44541ac10c4a20a1076b0476144f1, type: 3}
+    Count: 0
+    Res: {x: 0, y: 0}
+    UnitRes: {x: 0, y: 0}
+  RandomizeKey: 114
 --- !u!1 &735903949
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,6 +696,7 @@ MonoBehaviour:
   Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
   Forces:
   - {fileID: 165580325}
+  ToggleKey: 102
   ForcesCount: 0
   Res: {x: 0, y: 0}
   UnitRes: {x: 0, y: 0}
