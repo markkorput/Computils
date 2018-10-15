@@ -7,7 +7,7 @@ namespace Computils
 	public class ShaderRunner
 	{
 		public ComputeShader Shader;
-      
+
 #if UNITY_EDITOR
 		[Header("Read-Only")]
 		public int Count = 0;
@@ -20,16 +20,20 @@ namespace Computils
 		private uint count_ = 0;
 		private Vector2Int unitSize_;
 		private string resx_ = null;
-
+      
 		public int Kernel { get { return kernel_; } }
 		public string NameResolutionX { get { return resx_; } set { resx_ = value; }}
       
 		public void Setup(string kernelName, uint threadsX, uint threadsY) {
-			
 			this.threadSize_ = new Vector2Int((int)threadsX, (int)threadsY);
 			this.kernel_ = this.Shader.FindKernel(kernelName);
 		}
 
+		public void Setup(string kernelName, uint threadsX, uint threadsY, String xresName) {
+			this.Setup(kernelName, threadsX, threadsY);
+			this.NameResolutionX = xresName;
+		}
+      
 		public void Run(ComputeBuffer buf, string bufName)
 		{
 			// update our thread count/unity size/total resolution values if necessary

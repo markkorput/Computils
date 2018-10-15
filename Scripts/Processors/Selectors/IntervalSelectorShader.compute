@@ -1,0 +1,22 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSLoadSelectFactors
+
+RWStructuredBuffer<float3> positions_buf;
+RWStructuredBuffer<float> factors_buf;
+
+int ResolutionX;
+float3 Interval;
+
+[numthreads(4,4,1)]
+void CSLoadSelectFactors (uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+
+    float3 pos = positions_buf[idx];
+
+    float factor = Interval.x == 0.0 ? 1.0 : (float)(pos.x % Interval.x) % 2;
+    factor *= Interval.y == 0.0 ? 1.0 : (float)(pos.y % Interval.y) % 2;
+    factor *= Interval.z == 0.0 ? 1.0 : (float)(pos.z % Interval.z) % 2;
+
+    factors_buf[idx] = factor;
+}
