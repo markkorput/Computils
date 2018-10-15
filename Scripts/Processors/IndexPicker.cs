@@ -23,7 +23,7 @@ namespace Computils.Processors
 		public Processors.ShaderRunner PickerRunner;
 
 		public KeyCode RandomizeKey = KeyCode.R;
-      
+
 		private ComputeBuffer indicesBuf;
       
 		void Start()

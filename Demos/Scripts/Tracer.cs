@@ -14,7 +14,7 @@ namespace Computils.Demos
 			public Vector3 pos;
 			public TracePoint(uint i, Vector3 p) { index = i; pos = p; }
 		}
-
+      
 		public ComputeBufferFacade Particles;
 		public ComputeBufferFacade Trace;
 		public Processors.FindNearest FindNearest;
@@ -22,7 +22,7 @@ namespace Computils.Demos
 		public Transform TracePosTransform;
 		public Vector3 TracePos;
 		public bool RealtimePositions = false;
-
+      
 		public int MaxLength = 10;
 		public KeyCode NextKey = KeyCode.N;
 		public KeyCode ClearKey = KeyCode.C;
@@ -53,12 +53,12 @@ namespace Computils.Demos
 			if (TraceBuffer == null || TraceBuffer.count != MaxLength) Init((uint)this.MaxLength);
          
             // append next nearest particle to trace
-			if (curLength >= MaxLength || ReadyForNext)
+			if (curLength < MaxLength && ReadyForNext)
 			{            
 				this.AppendNext();
 				ReadyForNext = false;
 			}
-
+         
 			// update realtime positions, if enabled
             if (this.RealtimePositions)
             {
@@ -66,7 +66,7 @@ namespace Computils.Demos
                 this.IndexPicker.Pick(this.Particles.Get(), this.TraceBuffer, (from p in TracePoints select p.index).ToArray());
             }         
 		}
-
+      
 		private void AppendNext()
 		{
 			if (curLength == 0 && TracePosTransform != null) this.TracePos = this.TracePosTransform.position;
@@ -88,7 +88,7 @@ namespace Computils.Demos
 				TracePoints[i].index = closest.index;
 				TracePoints[i].pos = closest.pos;
 			}
-         
+
 			// write all our recorded positions
 			if (!this.RealtimePositions)
 			{

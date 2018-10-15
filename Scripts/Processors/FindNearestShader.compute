@@ -21,7 +21,7 @@ RWStructuredBuffer<Position> positions_buf;
 RWStructuredBuffer<uint> index_feedback_buf;
 RWStructuredBuffer<float> distances_buf;
 RWStructuredBuffer<uint> blacklist_buf;
-RWStructuredBuffer<Dist> feedback_buf;
+RWStructuredBuffer<float> feedback_buf;
 
 int ResolutionX;
 int BlacklistLength;
@@ -42,17 +42,25 @@ void CSFindNearest(uint3 id : SV_DispatchThreadID)
     const uint idx = id.x + id.y * ResolutionX;
 
     // when blacklisted, don't consider
-    //(int i=0; i<BlacklistLength; i++)
-    //    if (blacklist_buf[i] == idx)
-     //       return;
+    for(int i=0; i<BlacklistLength; i++)
+        if (blacklist_buf[i] == idx)
+            return;
 
     float dist = distances_buf[idx];
-    float closestdist = feedback_buf[0].dist;
+    float closestdist = feedback_buf[0]; //.dist;
 
-    //if (dist < closestdist) {
+    if (dist < closestdist) {
+        float3 p = positions_buf[idx].pos;
+
         index_feedback_buf[0] = idx;
-        feedback_buf[0].dist = dist;
-        feedback_buf[0].pos = positions_buf[idx].pos;
-        feedback_buf[0].count += 1.0;
-    //}
+        feedback_buf[0] = dist;
+        feedback_buf[1] = p.x;
+        feedback_buf[2] = p.y;
+        feedback_buf[3] = p.z;
+        feedback_buf[4] = feedback_buf[4] + 1.0;
+
+        // feedback_buf[0].dist = dist;
+        // feedback_buf[0].pos = positions_buf[idx].pos;
+        // feedback_buf[0].count += 1.0;
+    }
 }
