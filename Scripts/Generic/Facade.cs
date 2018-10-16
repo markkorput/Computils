@@ -18,7 +18,7 @@ namespace Computils.Generic {
         public Typ Get() {
           return inst;
         }
-      
+
         public void Set(Typ val)
         {
 			bool wasNull = this.inst == null;
@@ -29,12 +29,12 @@ namespace Computils.Generic {
             this.SetEvent.Invoke();
 			if (change) this.ChangeEvent.Invoke();
          
-			if (wasNull) {
+			if (wasNull && initCallbacks != null) {
 				foreach (var func in initCallbacks) func.Invoke(this.inst);
 				initCallbacks.Clear();
-			}         
+			}
         }
-
+      
 		protected static bool AreEqual(Typ a, Typ b) {
 			return (a == null && b == null) || (a != null && b != null && a.Equals(b));
 		}
