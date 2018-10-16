@@ -11,17 +11,32 @@ namespace Computils.Populators
     class FloatPopulator : MonoBehaviour
     {
         public ComputeBufferFacade Facade;
+		[Tooltip("Optional; source buffer who's amount we'll match (has priority over our Amount attribute")]
+		public ComputeBufferFacade AmountFacade;
 		public int Amount = 10000;
 		public float StartMinValue = 0;
 		public float StartMaxValue = 0;
 
 		private void OnEnable()
         {
-			float[] data = GetData(Amount, this.StartMinValue, this.StartMaxValue);
-			ComputeBuffer buf = Utils.Create(data);
-            Facade.Set(buf);
+			if (AmountFacade != null)
+			{
+				AmountFacade.GetAsync().Then((amountbuf) =>
+				{
+					this.Amount = amountbuf.count;
+					this.Populate(this.Amount, this.StartMinValue, this.StartMaxValue);               
+				}).Done();
+			} else {
+				this.Populate(this.Amount, this.StartMinValue, this.StartMaxValue);
+			}
         }
       
+		private void Populate(int amount, float valmin, float valmax) {
+			float[] data = GetData(amount, this.StartMinValue, this.StartMaxValue);
+            ComputeBuffer buf = Utils.Create(data);
+            Facade.Set(buf);         
+		}
+
 		private static float[] GetData(int amount, float valmin, float valmax) {
 			float[] verts = new float[amount];
 			var rnd = new System.Random();
