@@ -1,0 +1,3 @@
+[submodule "lib/C-Sharp-Promise"]
+	path = lib/C-Sharp-Promise
+	url = https://github.com/markkorput/C-Sharp-Promise.git
