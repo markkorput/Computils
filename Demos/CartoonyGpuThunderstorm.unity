@@ -156,6 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VertsBufFacade: {fileID: 743154084}
+  AlphaFactorsFacade: {fileID: 0}
   RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
   MeshTopology: 3
   MainColor: {r: 1, g: 1, b: 0, a: 0.5882353}
@@ -194,9 +195,10 @@ MonoBehaviour:
   BoxTranform: {fileID: 134599719}
   Runner:
     Shader: {fileID: 7200000, guid: 2611d078a6834445c91e3643f5e8f513, type: 3}
-    ForcesCount: 0
+    Count: 0
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
+  ToggleKey: 0
 --- !u!4 &134599719
 Transform:
   m_ObjectHideFlags: 0
@@ -253,7 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Runner:
     Shader: {fileID: 7200000, guid: c1af89f5e770e4826aa6a7133841a527, type: 3}
-    ForcesCount: 0
+    Count: 0
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
   FromTransform: {fileID: 0}
@@ -273,7 +275,7 @@ GameObject:
   - component: {fileID: 743154084}
   - component: {fileID: 743154083}
   m_Layer: 0
-  m_Name: Thunder
+  m_Name: ParticleConnector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -308,7 +310,7 @@ MonoBehaviour:
   ParticleIndices: 01000000020000000300000004000000050000000600000007000000080000000900000064000000c80000002c0100006e000000dc0000004a010000940200000203000070030000e7030000780300000903000065000000ca0000002f010000db0300008e0200004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000410100004101000041010000
   PickerRunner:
     Shader: {fileID: 7200000, guid: 58f44541ac10c4a20a1076b0476144f1, type: 3}
-    ForcesCount: 0
+    Count: 0
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
   RandomizeKey: 114
@@ -571,14 +573,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280bf6c5455f349a8a922f4033c895b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Runner:
+    Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
+    Count: 0
+    Res: {x: 0, y: 0}
+    UnitRes: {x: 0, y: 0}
   ForcesFacade: {fileID: 1081871663}
   PositionsFacade: {fileID: 1467028625}
-  Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
   Forces:
   - {fileID: 165580325}
-  ForcesCount: 0
-  Res: {x: 0, y: 0}
-  UnitRes: {x: 0, y: 0}
+  ForceFactors: {fileID: 0}
+  ToggleKey: 0
 --- !u!114 &1081871663 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114239977061053322, guid: b238bd9f039b44207852b4b3551a7340,
@@ -614,6 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Facade: {fileID: 1082088066}
+  AmountFacade: {fileID: 0}
   Amount: 10000
   StartMinValue: -5
   StartMaxValue: -1
