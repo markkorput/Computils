@@ -40,7 +40,7 @@ namespace Computils.Renderers
          
 			if (buf != null)
 			{
-				Render(this.RenderMaterial, buf, this.MeshTopology, this.MainColor, this.AlphaFactorsFacade.GetValid());
+				Render(this.RenderMaterial, buf, this.MeshTopology, this.MainColor, this.AlphaFactorsFacade == null ? null : this.AlphaFactorsFacade.GetValid());
 #if UNITY_EDITOR
 				this.VertCount = buf.count;
 #endif

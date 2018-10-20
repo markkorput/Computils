@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VertsBufFacade: {fileID: 651446784}
+  AlphaFactorsFacade: {fileID: 0}
   RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
   MeshTopology: 4
   MainColor: {r: 1, g: 1, b: 0.5882353, a: 0.78431374}
@@ -756,15 +757,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280bf6c5455f349a8a922f4033c895b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Runner:
+    Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
+    Count: 0
+    Res: {x: 0, y: 0}
+    UnitRes: {x: 0, y: 0}
   ForcesFacade: {fileID: 1081871663}
   PositionsFacade: {fileID: 1467028625}
-  Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
   Forces:
   - {fileID: 165580325}
+  ForceFactors: {fileID: 0}
   ToggleKey: 102
-  ForcesCount: 0
-  Res: {x: 0, y: 0}
-  UnitRes: {x: 0, y: 0}
 --- !u!114 &1081871663 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114239977061053322, guid: b238bd9f039b44207852b4b3551a7340,
@@ -800,6 +803,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Facade: {fileID: 1082088066}
+  AmountFacade: {fileID: 0}
   Amount: 10000
   StartMinValue: -5
   StartMaxValue: -1

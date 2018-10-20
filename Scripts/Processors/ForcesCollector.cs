@@ -22,6 +22,7 @@ namespace Computils.Processors
 		public Forces.Force[] Forces;
 		[Tooltip("Optional; should point to a buffer with single float values with a normalised (0.0-1.0) factor for each position which act a multiplier for how much the forces affect the positions")]
 		public ComputeBufferFacade ForceFactors;
+		private ComputeBuffer dummyForcesBuf;
 
 		public KeyCode ToggleKey = KeyCode.None;
 
@@ -59,12 +60,17 @@ namespace Computils.Processors
         {
 			this.Runner.Shader.SetFloat(ShaderProps.DeltaTime, Time.deltaTime);
 			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.forces_buf, forces_buf);
-         
+
 			bool useFactors = factors_buf != null;
 			this.Runner.Shader.SetBool(ShaderProps.UseFactors, useFactors);
-
-			if (useFactors) this.Runner.Shader.SetBuffer(
-				this.Runner.Kernel, ShaderProps.factors_buf, factors_buf);
+         
+			if (factors_buf == null)
+			{
+				if (dummyForcesBuf == null) dummyForcesBuf = new ComputeBuffer(1, sizeof(float));
+				factors_buf = dummyForcesBuf;
+			}         
+         
+			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.factors_buf, factors_buf);
          
 			this.Runner.Run(positions_buf, ShaderProps.positions_buf);
 		}
@@ -74,7 +80,7 @@ namespace Computils.Processors
             Event evt = Event.current;
             if (evt.isKey && Input.GetKeyDown(evt.keyCode)) this.OnKeyDown(evt);
         }
-
+      
         private void OnKeyDown(Event evt)
         {
 			if (evt.keyCode == this.ToggleKey) this.toggleActive = !this.toggleActive;
