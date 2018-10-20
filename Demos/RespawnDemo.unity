@@ -178,9 +178,10 @@ MonoBehaviour:
   BoxTranform: {fileID: 134599719}
   Runner:
     Shader: {fileID: 7200000, guid: 2611d078a6834445c91e3643f5e8f513, type: 3}
-    ForcesCount: 0
+    Count: 0
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
+  ToggleKey: 0
 --- !u!4 &134599719
 Transform:
   m_ObjectHideFlags: 0
@@ -467,14 +468,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280bf6c5455f349a8a922f4033c895b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Runner:
+    Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
+    Count: 0
+    Res: {x: 0, y: 0}
+    UnitRes: {x: 0, y: 0}
   ForcesFacade: {fileID: 1081871663}
   PositionsFacade: {fileID: 1467028625}
-  Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
   Forces:
   - {fileID: 165580325}
-  ForcesCount: 0
-  Res: {x: 0, y: 0}
-  UnitRes: {x: 0, y: 0}
+  ForceFactors: {fileID: 0}
+  ToggleKey: 0
 --- !u!114 &1081871663 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114239977061053322, guid: b238bd9f039b44207852b4b3551a7340,
@@ -510,6 +514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Facade: {fileID: 1082088066}
+  AmountFacade: {fileID: 0}
   Amount: 10000
   StartMinValue: -2
   StartMaxValue: -1
