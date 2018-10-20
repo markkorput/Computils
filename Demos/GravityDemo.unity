@@ -380,16 +380,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280bf6c5455f349a8a922f4033c895b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Runner:
+    Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
+    Count: 0
+    Res: {x: 0, y: 0}
+    UnitRes: {x: 0, y: 0}
   ForcesFacade: {fileID: 1081871663}
   PositionsFacade: {fileID: 1467028625}
-  Shader: {fileID: 7200000, guid: b3fa67380d364439f8fd0d4c8a52d601, type: 3}
   Forces:
   - {fileID: 165580325}
   - {fileID: 369161465}
   - {fileID: 1402916190}
-  ForcesCount: 0
-  Res: {x: 0, y: 0}
-  UnitRes: {x: 0, y: 0}
+  ForceFactors: {fileID: 0}
+  ToggleKey: 0
 --- !u!114 &1081871663 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114239977061053322, guid: b238bd9f039b44207852b4b3551a7340,
