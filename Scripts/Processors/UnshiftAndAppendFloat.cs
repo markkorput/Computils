@@ -23,7 +23,7 @@ namespace Computils.Processors
         [RangeAttribute(0,1)]
 		public float NextValue = 0.5f;
       
-      
+
 		private int AppendKernel;
 
 		void Start()
@@ -56,6 +56,9 @@ namespace Computils.Processors
             Runner.Shader.SetFloat(ShaderProps.NewValue, newval);
 			Runner.Shader.SetBuffer(this.AppendKernel, ShaderProps.ValuesBuf, buf);
 			Runner.Shader.Dispatch(this.AppendKernel, 1, 1, 1);
-        }      
+        }
+      
+		public void SetValue(float v) { NextValue = v; }
+		public void SetOnUpdate(bool v) { this.OnUpdate = v; }      
 	}
 }
