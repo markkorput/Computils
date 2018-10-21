@@ -1,0 +1,10 @@
+{
+    "name": "Computils",
+    "references": [
+        "RSG"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
