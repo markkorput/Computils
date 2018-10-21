@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 04b51395adbb44a329f1264494c48e23
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ValuesBufFacade: {instanceID: 0}
+  - RenderMaterial: {fileID: 2100000, guid: 5ac80583c69b944b59609ade34673438, type: 2}
+  - Plane: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

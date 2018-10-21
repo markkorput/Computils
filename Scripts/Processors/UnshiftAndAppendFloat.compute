@@ -1,0 +1,26 @@
+﻿#pragma kernel CSUnshift
+#pragma kernel CSAppend
+
+// #pragma target 4.0
+
+RWStructuredBuffer<float> valuesBuffer;
+
+int ResolutionX;
+int Count;
+float NewValue;
+
+[numthreads (1, 1, 1)]
+void CSUnshift(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+
+    if (idx == ((uint)Count)-1) return;
+    valuesBuffer[idx] = valuesBuffer[idx+1];
+}
+
+[numthreads (1, 1, 1)]
+void CSAppend(uint3 id : SV_DispatchThreadID)
+{
+    // const uint idx = id.x + id.y * ResolutionX;
+    valuesBuffer[Count-1] = NewValue;
+}
