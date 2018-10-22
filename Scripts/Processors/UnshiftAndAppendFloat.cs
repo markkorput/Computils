@@ -22,7 +22,7 @@ namespace Computils.Processors
 		public ComputeBufferFacade Values;
 		public ShaderRunner Runner;
 		[Tooltip("Will optimize for speed at the cost of Memory; creates a second ComputeBuffer with the same size and swaps them back and forth")]
-		public bool Threaded = false;
+		public bool MultiThread = false;
 		public bool OnUpdate = true;
 		[RangeAttribute(0, 1)]
 		public float NextValue = 0.5f;
@@ -32,8 +32,8 @@ namespace Computils.Processors
 
 		void Start()
 		{
-			this.threaded_ = this.Threaded; // can't change after initialization
-
+			this.threaded_ = this.MultiThread; // can't change after initialization
+         
 			if (this.threaded_) {
 				Runner.Setup(ShaderProps.KernelThreaded, 4, 4, ShaderProps.ResolutionX);
 			} else {
