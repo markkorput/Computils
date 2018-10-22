@@ -33,7 +33,7 @@ namespace Computils
 			this.Setup(kernelName, threadsX, threadsY);
 			this.NameResolutionX = xresName;
 		}
-      
+
 		public void Run(ComputeBuffer buf, string bufName)
 		{
 			// update our thread count/unity size/total resolution values if necessary
@@ -58,6 +58,16 @@ namespace Computils
 			if (this.resx_ != null) this.Shader.SetInt(this.resx_, this.threadSize_.x * this.unitSize_.x);
             // Dispatch
 			this.Shader.Dispatch(Kernel, unitSize_.x, unitSize_.y, 1);
+		}
+      
+		public void RunOnce(ComputeBuffer buf, string bufName) {
+			this.Shader.SetBuffer(this.kernel_, bufName, buf);
+			this.Shader.Dispatch(Kernel, 1, 1, 1);
+
+#if UNITY_EDITOR
+            // Update info in Unity editor for debugging...
+			this.Count = buf.count;
+#endif
 		}
 	}
 }
