@@ -22,10 +22,10 @@ namespace Computils.Renderers
         public Material RenderMaterial;
 		public MeshTopology MeshTopology = MeshTopology.LineStrip;
 		public Color MainColor = new Color(1, 1, 1, 1);
+		[Tooltip("Optional; is specified the localToWorldMatrix of the BoxCollider2D's transform will be used as well as it offset and size properties to define the frame of the graph")]
 		public BoxCollider2D Frame;
 		public float ValMin = 0;
 		public float ValMax = 10;
-      
 
 #if UNITY_EDITOR
         [Header("Read-Only")]
@@ -45,13 +45,13 @@ namespace Computils.Renderers
 
 			if (buf != null)
 			{
-				Render(this.RenderMaterial, buf, this.MeshTopology, this.MainColor, this.Frame.transform.localToWorldMatrix, this.Origin, this.Size, new Vector2(this.ValMin, this.ValMax));
+				Render(this.RenderMaterial, buf, this.MeshTopology, this.MainColor, this.TransMat, this.Origin, this.Size, new Vector2(this.ValMin, this.ValMax));
 #if UNITY_EDITOR
 				this.VertCount = buf.count;
 #endif
 			}
         }
-      
+
 		private static void Render(Material mat, ComputeBuffer valuesBuf, MeshTopology topo, Color clr, Matrix4x4 matrix, Vector2 origin, Vector2 size, Vector2 valrange)
         {
             mat.SetPass(0);
@@ -68,18 +68,22 @@ namespace Computils.Renderers
          
             Graphics.DrawProcedural(topo, valuesBuf.count);
         }
+      
+		private Matrix4x4 TransMat { get {
+				return this.Frame == null ? Matrix4x4.identity : this.Frame.transform.localToWorldMatrix;
+			}}
 
 		private Vector2 Origin { get {
 				//Frame.transform.localToWorldMatrix * Frame.
-				return Frame.offset - (Frame.size * 0.5f);
+				return this.Frame == null ? new Vector2(0,0) : this.Frame.offset - (Frame.size * 0.5f);
 			}}
-      
+
 		private Vector2 Size
         {
             get
             {
                 //Frame.transform.localToWorldMatrix * Frame.
-                return Frame.size;
+				return this.Frame == null ? new Vector2(1,1) : this.Frame.size;
             }
         }
     }
