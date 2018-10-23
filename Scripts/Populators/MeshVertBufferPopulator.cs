@@ -16,7 +16,7 @@ namespace Computils.Populators
         public MeshFilter MeshFilter;
         public MeshInterpretation Interpretation = MeshInterpretation.Triangles;
 		public Transform Transformer;
-      
+
 #if BOUNDING_BOX
 		[Header("Read-Only")]
 		public Vector3 BoundingBoxMin;
@@ -67,7 +67,7 @@ namespace Computils.Populators
 
             return data;
         }
-
+      
 		public static Vector3[] GetTriangleVerts(Mesh mesh, Matrix4x4 transformMatrix)
         {
             int[] vertIndices = mesh.GetTriangles(0);

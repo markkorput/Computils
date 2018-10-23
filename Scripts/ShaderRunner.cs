@@ -63,7 +63,7 @@ namespace Computils
 		public void RunOnce(ComputeBuffer buf, string bufName) {
 			this.Shader.SetBuffer(this.kernel_, bufName, buf);
 			this.Shader.Dispatch(Kernel, 1, 1, 1);
-
+         
 #if UNITY_EDITOR
             // Update info in Unity editor for debugging...
 			this.Count = buf.count;

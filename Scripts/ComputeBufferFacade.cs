@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Computils {
 	[AddComponentMenu("Computils/Compute Buffer Facade")]
-    public class ComputeBufferFacade : Generic.Facade<ComputeBuffer>
+	public class ComputeBufferFacade : Generic.Facade<ComputeBuffer>, System.IDisposable
     {
-      
+
 #if UNITY_EDITOR
 		[Header("Read-Only")]
 		public int Count = 0;
@@ -20,5 +20,12 @@ namespace Computils {
         {
           return this.inst != null && this.inst.IsValid() ? this.inst : null;
         }
+      
+		public void Dispose() {
+			if (this.inst == null) return;
+			this.inst.Release();
+			this.inst.Dispose();
+			this.inst = null;         
+		}
     }
 }
