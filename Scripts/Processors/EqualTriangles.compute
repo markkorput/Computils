@@ -23,15 +23,15 @@ inline float angleBetween(float3 v1, float3 v2) {
 inline float triSurface(float3 tri[3]) {
     // triangle size = base * height * 0.5
     float3 base = tri[1]-tri[0];
-    /*float3 diagonal = tri[2]-tri[0];
+    float3 diagonal = tri[2]-tri[0];
     float baselen = length(base);
 
     float angle = angleBetween(base, diagonal);
     // sin(angle) = opposite side length / diagonal side length
     // opposite side length = sin(angle) * diagonal side length
     float height = sin(angle) * length(diagonal);
-    return baselen * height * 0.5;*/
-    return length(base);
+    return baselen * height * 0.5;
+    // return length(base);
 }
 
 [numthreads (1, 1, 1)]
