@@ -1,0 +1,28 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+struct Pos
+{
+    float3 pos;
+};
+
+struct Idx {
+    uint index;
+};
+
+RWStructuredBuffer<Pos> positions_buf;
+RWStructuredBuffer<Pos> selection_buf;
+RWStructuredBuffer<Idx> indices_buf;
+
+int ResolutionX;
+int IndicesCount;
+
+[numthreads(4,4,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+    if (idx >= (uint)IndicesCount) return;
+
+    uint pidx = indices_buf[idx].index;
+    selection_buf[idx].pos = positions_buf[pidx].pos;
+}

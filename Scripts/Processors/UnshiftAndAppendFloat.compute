@@ -1,0 +1,64 @@
+﻿#pragma kernel CSUnshiftMonoThread
+#pragma kernel CSUnshiftSingleRun
+#pragma kernel CSAppend
+#pragma kernel CSUnshiftAndAppendSingleRun
+#pragma kernel CSUnshiftAndAppendThreaded
+
+// #pragma target 4.0
+
+RWStructuredBuffer<float> valuesBuffer;
+RWStructuredBuffer<float> targetBuffer;
+
+int ResolutionX;
+int Count;
+float NewValue;
+
+[numthreads (1, 1, 1)]
+void CSUnshiftMonoThread(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+
+    if (idx == ((uint)Count)-1) return;
+    valuesBuffer[idx] = valuesBuffer[idx+1];
+}
+
+[numthreads (1, 1, 1)]
+void CSUnshiftSingleRun(uint3 id : SV_DispatchThreadID)
+{
+    int last = Count-1;
+
+    for (int i=0; i<last; i++) {
+        valuesBuffer[i] = valuesBuffer[i+1];
+    }
+}
+
+[numthreads (1, 1, 1)]
+void CSAppend(uint3 id : SV_DispatchThreadID)
+{
+    valuesBuffer[Count-1] = NewValue;
+}
+
+[numthreads (1, 1, 1)]
+void CSUnshiftAndAppendSingleRun(uint3 id : SV_DispatchThreadID)
+{
+    int last = Count-1;
+
+    for (int i=0; i<last; i++) {
+        valuesBuffer[i] = valuesBuffer[i+1];
+    }
+
+    valuesBuffer[last] = NewValue;
+}
+
+[numthreads (4, 4, 1)]
+void CSUnshiftAndAppendThreaded(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * (uint)ResolutionX;
+
+    if (idx == (uint)Count-1) {
+        targetBuffer[idx] = NewValue;
+        return;
+    }
+
+    targetBuffer[idx] = valuesBuffer[idx+1];
+}

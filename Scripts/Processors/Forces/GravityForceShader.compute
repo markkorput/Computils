@@ -1,0 +1,59 @@
+﻿#pragma kernel CSForceTo
+
+// #pragma target 4.0
+
+#define thread_group_size_x 4
+#define thread_group_size_y 4
+
+struct Position
+{
+    float3 pos;
+};
+
+struct Force
+{
+    float3 force;
+};
+
+RWStructuredBuffer<Position> positions_buf;
+RWStructuredBuffer<Force> forces_buf;
+
+int PositionsCount;
+float Strength;
+bool Additive;
+int ResolutionX;
+float3 Origin;
+float MinDistance;
+
+float rand(float2 co, float maxval){
+    float tmp = dot(co, float2(12.9898, 78.233));
+    return frac(sin(tmp)*43758.5453) * maxval;
+}
+
+float3 randPos(float3 co) {
+    return float3(rand(co.xy, 1.0)-0.5, rand(co.yz, 1.0)-0.5, rand(co.zx, 1.0)-0.5);
+}
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSForceTo(uint3 id : SV_DispatchThreadID)
+{
+    const uint forceidx = id.x + id.y * ResolutionX;
+    uint posidx = forceidx;
+    if (posidx >= (uint)PositionsCount) return;
+
+    float3 pos = positions_buf[posidx].pos;
+    float3 delta = Origin - pos;
+    float dist = length(delta);
+
+    float3 forceDir;
+    if (dist < MinDistance) {
+        forceDir = normalize(randPos(pos + id));
+    } else {
+        forceDir = normalize(delta);
+    }
+
+    float3 force = forceDir * Strength;
+
+    if (Additive) force += forces_buf[forceidx].force;
+    forces_buf[forceidx].force = force;
+}

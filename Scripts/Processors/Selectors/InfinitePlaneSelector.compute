@@ -1,0 +1,20 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSLoadSelectFactors
+
+RWStructuredBuffer<float3> positions_buf;
+RWStructuredBuffer<float> factors_buf;
+
+int ResolutionX;
+float4x4 AlignMat;
+float Falloff;
+
+[numthreads(4,4,1)]
+void CSLoadSelectFactors (uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+
+    float alignedZ = mul(AlignMat, float4(positions_buf[idx].xyz, 1.0)).z;
+    float factor = clamp(alignedZ / max(Falloff, 0.0001), 0.0, 1.0);
+
+    factors_buf[idx] = factor;
+}

@@ -1,0 +1,49 @@
+﻿#pragma kernel CSRespawn
+
+// #pragma target 4.0
+
+#define thread_group_size_x 4
+#define thread_group_size_y 4
+
+struct Position
+{
+    float3 pos;
+};
+
+struct BirthTime
+{
+    float time;
+};
+
+RWStructuredBuffer<Position> positions_buf;
+RWStructuredBuffer<BirthTime> times_buf;
+
+int ResolutionX;
+float Time;
+float MaxAge;
+float MaxAgeVariation;
+float4x4 BoxMatrix;
+
+
+float rand(float2 co, float maxval){
+    float tmp = dot(co, float2(12.9898, 78.233));
+    return frac(sin(tmp)*43758.5453) * maxval;
+}
+
+float3 randPos(float3 co) {
+    return float3(rand(co.xy, 1.0)-0.5, rand(co.yz, 1.0)-0.5, rand(co.zx, 1.0)-0.5);
+}
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSRespawn(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+    float birthtime = times_buf[idx].time;
+    float age = Time - birthtime;
+    float maxage = MaxAge + rand((float2)id, MaxAgeVariation) - MaxAgeVariation * 0.5;
+    if (age < maxage) return;
+
+    float3 pos = (float3)mul(BoxMatrix, float4(randPos(positions_buf[idx].pos + id).xyz, 1.0));
+    positions_buf[idx].pos = pos;
+    times_buf[idx].time = Time;
+}

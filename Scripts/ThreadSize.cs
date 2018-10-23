@@ -15,7 +15,7 @@ namespace Computils
 			this.count = count;
 			this.threadx = x;
 			this.thready = y;
-
+         
 			// calc
 			float v = (float)count / (float)threadx;
 

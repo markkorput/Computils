@@ -16,15 +16,15 @@ namespace Computils.Processors
             public const string ResolutionX = "ResolutionX";
 			public const string AnimateAll = "AnimateAll";
         }
-
+      
         public ComputeShader Shader;
         public Computils.ComputeBufferFacade VertsFacade;
         public Computils.ComputeBufferFacade TargetsFacade;
         public float EaseFactor = 0.05f;
 		[Tooltip("When true; will update all verts, also when there are more verts than targets")]
 		public bool AnimateAll = true;
-      
-        private int Kernel;      
+
+        private int Kernel;
         private Vector2Int ThreadSize = new Vector2Int(4, 4);
         private uint _count = 0;
         private Vector2Int UnitSize;

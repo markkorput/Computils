@@ -1,0 +1,32 @@
+﻿#pragma kernel CSForce
+
+// #pragma target 4.0
+
+#define thread_group_size_x 4
+#define thread_group_size_y 4
+
+struct ForceItem
+{
+    float3 force;
+};
+
+RWStructuredBuffer<ForceItem> forces_buf;
+
+float3 Force;
+float MaxVariation;
+bool Additive;
+int ResolutionX;
+
+float rand(float2 co, float maxval){
+    float tmp = dot(co, float2(12.9898, 78.233));
+    return frac(sin(tmp)*43758.5453) * maxval;
+}
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSForce(uint3 id : SV_DispatchThreadID)
+{
+    const uint forceidx = id.x + id.y * ResolutionX;
+    float3 f = Force + (rand((float2)id.xy, 1.0)-0.5) * Force;
+    if (Additive) f += forces_buf[forceidx].force;
+    forces_buf[forceidx].force = f;
+}

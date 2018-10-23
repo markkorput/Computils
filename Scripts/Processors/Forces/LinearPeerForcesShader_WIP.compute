@@ -1,0 +1,45 @@
+﻿#pragma kernel CSPeerForce
+
+// #pragma target 4.0
+
+#define thread_group_size_x 1
+#define thread_group_size_y 1
+
+struct Position
+{
+    float3 pos;
+};
+
+struct Force
+{
+    float3 force;
+};
+
+RWStructuredBuffer<Position> positions_buf;
+RWStructuredBuffer<Force> forces_buf;
+
+float Strength;
+float ZeroDist;
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSPeerForce(uint3 id : SV_DispatchThreadID)
+{
+    const uint posidx1 = id.x;
+    const uint posidx2 = id.y;
+    if (posidx1 == posidx2) return;
+
+    float3 pos1 = positions_buf[posidx1].pos;
+    float3 pos2 = positions_buf[posidx2].pos;
+    float3 delta = pos1 - pos2;
+    float dist = length(delta);
+
+    float3 force = float3(0,0,0);
+
+    if (dist > 0.0) {
+        force = (1.0 - min(dist/ZeroDist, 1.0)) * Strength * normalize(delta);
+    } else {
+        force = float3(sin(id.x * 0.0113f) * Strength, cos(id.y * 0.0113f) * Strength, cos(id.x * 0.0113f) * Strength);
+    }
+
+    forces_buf[posidx1].force += force;
+}
