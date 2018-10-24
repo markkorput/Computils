@@ -34,8 +34,7 @@ namespace Computils.Populators
 			buffer.SetData(data);
             return buffer;
         }
-      
-      
+
 		public static ComputeBuffer UpdateOrCreate(ComputeBuffer buf, Matrix4x4[] data)
         {
             int count = data.Length;
@@ -53,6 +52,26 @@ namespace Computils.Populators
 
             }
             
+            return Create(data);
+        }
+
+		public static ComputeBuffer UpdateOrCreate(ComputeBuffer buf, Vector3[] data)
+        {
+            int count = data.Length;
+
+            if (buf != null && buf.count == count)
+            {
+                buf.SetData(data);
+                return buf;
+            }
+         
+            if (buf != null)
+            {
+                buf.Release();
+                buf.Dispose();
+
+            }
+         
             return Create(data);
         }
 

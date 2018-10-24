@@ -1,0 +1,129 @@
+﻿#pragma kernel CSCalculateMeshSurface
+#pragma kernel CSConvert
+
+// #pragma target 4.0
+
+struct Tri {
+    float3 verts[3];
+};
+
+RWStructuredBuffer<Tri> mesh_buf;
+RWStructuredBuffer<Tri> target_buf;
+RWStructuredBuffer<float> calc_buf;
+
+// int ResolutionX;
+int MeshVertCount;
+int TargetVertCount;
+float TriangleSize;
+
+inline float angleBetween(float3 v1, float3 v2) {
+    return acos(dot(v1, v2)/(length(v1)*length(v2)));
+}
+
+inline float triSurface(float3 tri[3]) {
+    // triangle size = base * height * 0.5
+    float3 base = tri[1]-tri[0];
+    float3 diagonal = tri[2]-tri[0];
+    float baselen = length(base);
+
+    float angle = angleBetween(base, diagonal);
+    // sin(angle) = opposite side length / diagonal side length
+    // opposite side length = sin(angle) * diagonal side length
+    float height = sin(angle) * length(diagonal);
+    return baselen * height * 0.5;
+    // return length(base);
+}
+
+[numthreads (1, 1, 1)]
+void CSCalculateMeshSurface(uint3 id : SV_DispatchThreadID)
+{
+    int MeshTriangleCount = floor(((float)MeshVertCount) / 3.0f);
+
+    float surface = 0.0f;
+    float avg = 0.0f;
+
+    for(int i=0; i<MeshTriangleCount; i++) {
+        float trisize = 1.3f; //triSurface(mesh_buf[i].verts);
+        surface += trisize;
+        avg = (avg * i + trisize) / (i+1);
+
+    }
+
+    calc_buf[0] = surface;
+    calc_buf[1] = avg;
+    calc_buf[2] = (float)MeshTriangleCount;
+}
+
+[numthreads (1, 1, 1)]
+void CSConvert(uint3 id : SV_DispatchThreadID)
+{
+    // start at first mesh triangle
+    int mesh_tri_idx = 0;
+    float mesh_tri_size = triSurface(mesh_buf[0].verts);
+    float3 meshtri[3] = mesh_buf[0].verts;
+    // first subtriangle for this mesh triangle
+    int subcount = ceil(mesh_tri_size / TriangleSize);
+    int subidx = 0;
+
+    float3 tri[3];
+    float3 step1,step2;
+
+    {   // calculate stepsize along both sides of this mesh triangle
+        float num1 = max(1, floor((float)subcount*0.5f));
+        float3 side1 = meshtri[1] - meshtri[0];
+        step1 = side1 / num1;
+
+        float num2 = subcount-num1;
+        float3 side2 = meshtri[2] - meshtri[0];
+        step2 = side1 / (num2+1);
+    }
+
+    // first subtriangle verts
+    tri[0] = meshtri[0];
+    tri[1] = meshtri[0] + step1;
+    tri[2] = meshtri[0] + step2;
+
+    for(int tri_idx = 0; tri_idx < floor((float)TargetVertCount/3.0); tri_idx++) {
+        if (subidx >= subcount) {
+            // next mesh triangle
+            mesh_tri_idx++;
+            if ((mesh_tri_idx * 3) >= MeshVertCount) mesh_tri_idx = 0;
+            mesh_tri_size = triSurface(mesh_buf[mesh_tri_idx].verts);
+            meshtri = mesh_buf[mesh_tri_idx].verts;
+            // first subtriangle for this mesh triangle
+            subcount = ceil(mesh_tri_size / TriangleSize);
+            subidx = 0;
+
+            {   // calculate stepsize along both sides of this mesh triangle
+                float num1 = max(1, floor((float)subcount*0.5f));
+                float3 side1 = meshtri[1] - meshtri[0];
+                step1 = side1 / num1;
+
+                float num2 = subcount-num1;
+                float3 side2 = meshtri[2] - meshtri[0];
+                step2 = side1 / (num2+1);
+            }
+
+            // first triangle verts
+            tri[0] = meshtri[0];
+            tri[1] = meshtri[0] + step1;
+            tri[2] = meshtri[0] + step2;
+        }
+
+        if ((subidx & 1) == 0) {
+                                tri[0] = tri[1];
+            tri[1] += step1;
+
+                } else {
+                    tri[0] = tri[2];
+            tri[2] = tri[2] + step2;
+
+        }
+
+        // write
+        target_buf[tri_idx].verts = tri;
+
+        // progress
+        subidx++;
+    }
+}
