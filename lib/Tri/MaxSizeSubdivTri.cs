@@ -11,7 +11,7 @@ namespace Computils.Tri
 		{
 			this.maxsize = size;
 		}
-
+      
 		public Vector3[] GetSubdivVerts()
 		{
 			var size = this.SurfaceSize;
@@ -43,7 +43,7 @@ namespace Computils.Tri
         {
             return new MaxSizeSubdivTri(v1, v2, v3, size).GetSubdivVerts();
         }
-
+      
 		// Get subdiv verts for a list of verts (mesh)
 		public static Vector3[] GetSubdivVerts(Vector3[] triverts, float size) {
 			List<Vector3> verts = new List<Vector3>();
@@ -52,7 +52,7 @@ namespace Computils.Tri
 				var curverts = GetSubdivVerts(triverts[i + 0], triverts[i + 1], triverts[i + 2], size);
 				foreach (var v in curverts) verts.Add(v);
 			}
-
+         
 			return verts.ToArray();
 		}
     }

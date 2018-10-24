@@ -15,7 +15,7 @@ namespace Computils.Tri
 		public Methd Method = Methd.MaxSize;
 		public bool AtStart = true;
 		public bool EachUpdate = true;
-
+      
 		public UnityEvent AfterSubdiv;
 
 		private void Start()
@@ -27,14 +27,14 @@ namespace Computils.Tri
 		{
 			if (this.EachUpdate) this.Subdivide();
 		}
-
+      
 		public void Subdivide() {
 			var buf = Source.GetValid();
-			if (buf == null || buf.stride != sizeof(float)*3) return;
+			if (buf == null || buf.stride != sizeof(float) * 3) return;
          
 			Vector3[] sourceverts = new Vector3[buf.count];
 			buf.GetData(sourceverts);
-
+         
 			Vector3[] newverts = new Vector3[0];
 			if (this.Method.Equals(Methd.MaxSize)) newverts = MaxSizeSubdivTri.GetSubdivVerts(sourceverts, this.SubdivsSize);
 			if (this.Method.Equals(Methd.Equal)) newverts = EqualSubdivTri.GetSubdivVerts(sourceverts, this.SubdivsSize);
