@@ -19,6 +19,7 @@ namespace Computils.Processors
 		public ShaderRunner Runner;
 		public ComputeBufferFacade ForcesFacade;
 		public ComputeBufferFacade PositionsFacade;
+        [Tooltip("Defaults to all Forces found in self and children")]
 		public Forces.Force[] Forces;
 		[Tooltip("Optional; should point to a buffer with single float values with a normalised (0.0-1.0) factor for each position which act a multiplier for how much the forces affect the positions")]
 		public ComputeBufferFacade ForceFactors;
@@ -30,7 +31,8 @@ namespace Computils.Processors
 
 		private void Start()
         {
-			this.Runner.Setup(ShaderProps.Kernel, 4, 4, ShaderProps.ResolutionX);
+			this.Runner.Setup(ShaderProps.Kernel, 4, 4, ShaderProps.ResolutionX);         
+			if (this.Forces.Length == 0) this.Forces = GetComponentsInChildren<Forces.Force>();
         }
       
 		void Update()
