@@ -101,7 +101,7 @@ namespace Computils.Demos
 				this.IndexPicker.Pick(this.Particles.Get(), this.TraceBuffer, (from p in TracePoints select p.index).ToArray());
 			}
 		}
-
+      
 		private void AppendNext()
 		{
 			if (curLength == 0 && TracePosTransform != null) this.TracePos = this.TracePosTransform.position;
