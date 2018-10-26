@@ -11,12 +11,16 @@ namespace Computils.Populators
     class EmptyPopulator : MonoBehaviour
     {
         public ComputeBufferFacade Facade;
+		public ComputeBufferFacade AmountFacade;
 		public int Amount = 10000;
 		public Vector3 StartValue;
 
 		private void OnEnable()
         {
             Vector3[] verts = null;
+
+			var amountbuf = AmountFacade == null ? null : this.AmountFacade.GetValid();
+			if (amountbuf != null) this.Amount = amountbuf.count;
 
 			verts = GetVerts(Amount, this.StartValue);
             ComputeBuffer buf = Utils.Create(verts);
