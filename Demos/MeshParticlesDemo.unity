@@ -698,7 +698,7 @@ GameObject:
   - component: {fileID: 1467028625}
   - component: {fileID: 1285023771}
   m_Layer: 0
-  m_Name: ParticlesBuffer
+  m_Name: ParticlePositionsBuffer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

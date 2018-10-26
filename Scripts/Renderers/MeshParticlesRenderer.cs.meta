@@ -4,8 +4,10 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - VertsBufFacade: {instanceID: 0}
-  - RenderMaterial: {fileID: 2100000, guid: cc933965a9e4f4776a3a4c6d183d7855, type: 2}
+  - ParticlesPositionsFacade: {instanceID: 0}
+  - MeshFacade: {instanceID: 0}
+  - AlphaFactorsFacade: {instanceID: 0}
+  - RenderMaterial: {fileID: 2100000, guid: cea64327331744676aa25bcb6893405b, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
