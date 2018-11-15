@@ -61,7 +61,7 @@ namespace Computils.Populators
          
             // coroutine stuff
             uint batchIdx = 0;
-         
+
             foreach (var vert in verts)
             {
                 if (vert.x < this.BoundingBoxMin.x) this.BoundingBoxMin.x = vert.x;
@@ -88,7 +88,7 @@ namespace Computils.Populators
          
 			for (int i = 0; i < count; i++)
 			{
-				dest[i] = transformMatrix * new Vector4(mesh.vertices[vertIndices[i]].x, mesh.vertices[vertIndices[i]].y, mesh.vertices[vertIndices[i]].z, 1);
+				dest[i] = transformMatrix * new Vector4(mesh.vertices[vertIndices[i]].x, mesh.vertices[vertIndices[i]].y, mesh.vertices[vertIndices[i]].z, 0);
 
 				// coroutine stuff
                 batchIdx++;
@@ -107,7 +107,7 @@ namespace Computils.Populators
          
 			for (int i = 0; i < count; i++)
             {
-                dest[i] = transformMatrix * new Vector4(mesh.vertices[i].x, mesh.vertices[i].y, mesh.vertices[i].z, 1);
+                dest[i] = transformMatrix * new Vector4(mesh.vertices[i].x, mesh.vertices[i].y, mesh.vertices[i].z, 0);
 
 				// coroutine stuff
 				batchIdx++;

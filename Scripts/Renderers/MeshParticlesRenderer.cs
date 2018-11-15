@@ -29,6 +29,8 @@ namespace Computils.Renderers
 		public Material RenderMaterial;
 		public MeshTopology MeshTopology = MeshTopology.Points;
 		public Color MainColor = new Color(1, 1, 1, 0.3f);
+        [Tooltip("This transform's localToWolrd matrix will be used to transform particle positions")]
+		public Transform ModelMatrixParent;
 
 #if UNITY_EDITOR
         [System.Serializable]
@@ -60,7 +62,7 @@ namespace Computils.Renderers
 			       this.MeshTopology,
 			       this.RenderMaterial,
 			       this.MainColor,
-			       this.ParticlesPositionsFacade == null ? Matrix4x4.identity : this.ParticlesPositionsFacade.transform.localToWorldMatrix,
+			       this.ModelMatrixParent == null ? Matrix4x4.identity : this.ModelMatrixParent.localToWorldMatrix,
 			       this.AlphaFactorsFacade == null ? null : this.AlphaFactorsFacade.GetValid());
 
 #if UNITY_EDITOR
