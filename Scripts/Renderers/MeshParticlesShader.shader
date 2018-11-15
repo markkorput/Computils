@@ -22,6 +22,7 @@
 
             #include "UnityCG.cginc"
 
+            float4x4 ParticleModelMatrix;
             float4 MainColor;
             int UseAlphaFactors;
             int ParticleCount;
@@ -45,7 +46,8 @@
                 uint particleidx = id / MeshVertCount; //(uint)floor((float)id / (float)MeshVertCount);
                 uint meshvertidx = id - (particleidx * MeshVertCount);
 
-                float3 particleWorldPos = buf_particle_positions[particleidx];
+                float3 particlePos = buf_particle_positions[particleidx];
+                float3 particleWorldPos = mul(ParticleModelMatrix, float4(particlePos, 1));
                 float3 meshVertPos = buf_mesh[meshvertidx];
                 float3 worldPos = particleWorldPos + meshVertPos;
 

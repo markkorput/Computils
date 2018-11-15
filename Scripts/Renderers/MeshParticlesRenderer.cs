@@ -16,6 +16,7 @@ namespace Computils.Renderers
 			public const string UseAlphaFactors = "UseAlphaFactors";
 			public const string MeshVertCount = "MeshVertCount";
 			public const string ParticleCount = "ParticleCount";
+			public const string ParticleModelMatrix = "ParticleModelMatrix";
 
 		}
       
@@ -36,7 +37,7 @@ namespace Computils.Renderers
 		    public int MeshVertCount;
 		    public int TotalVertCount;
 		}
-
+      
 		public Dinfo DebugInfo;
 #endif
       
@@ -59,6 +60,7 @@ namespace Computils.Renderers
 			       this.MeshTopology,
 			       this.RenderMaterial,
 			       this.MainColor,
+			       this.ParticlesPositionsFacade == null ? Matrix4x4.identity : this.ParticlesPositionsFacade.transform.localToWorldMatrix,
 			       this.AlphaFactorsFacade == null ? null : this.AlphaFactorsFacade.GetValid());
 
 #if UNITY_EDITOR
@@ -66,6 +68,7 @@ namespace Computils.Renderers
 			this.DebugInfo.MeshVertCount = meshbuf.count;
 			this.DebugInfo.TotalVertCount = partbuf.count * meshbuf.count;
 #endif
+            
 		}
       
 		private static void Render(
@@ -74,7 +77,8 @@ namespace Computils.Renderers
             MeshTopology topo,
             Material mat,
             Color clr,
-            ComputeBuffer alphaFactorsBuf = null)
+			Matrix4x4 particleModelMatrix,
+			ComputeBuffer alphaFactorsBuf = null)
 		{
 			mat.SetPass(0);
 			mat.SetBuffer(ShaderProps.buf_particle_positions, partbuf);
@@ -83,6 +87,8 @@ namespace Computils.Renderers
 			mat.SetInt(ShaderProps.ParticleCount, partbuf.count);
 			mat.SetColor(ShaderProps.MainColor, clr);
 			mat.SetInt(ShaderProps.UseAlphaFactors, alphaFactorsBuf == null ? 0 : 1);
+			mat.SetMatrix(ShaderProps.ParticleModelMatrix, particleModelMatrix);
+         
 			if (alphaFactorsBuf != null) mat.SetBuffer(ShaderProps.buf_alphafactors, alphaFactorsBuf);
 
 			int total_vert_count = partbuf.count * meshbuf.count;
