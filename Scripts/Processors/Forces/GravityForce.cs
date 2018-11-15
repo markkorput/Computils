@@ -23,6 +23,7 @@ namespace Computils.Processors.Forces
 		}
 
 		public ComputeShader Shader;
+		public Transform CloudParent;
 		public Transform OriginTransform;
 		public Vector3 Origin;
 		public float Strength = 9.81f;
@@ -45,11 +46,15 @@ namespace Computils.Processors.Forces
         {
             this.Kernel = this.Shader.FindKernel(ShaderProps.Kernel);
         }
-
+      
 		override public void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf)
         {
-			if (OriginTransform != null) this.Origin = OriginTransform.position;
-         
+			if (OriginTransform != null)
+			{
+				this.Origin = OriginTransform.position;            
+				if (this.CloudParent != null) this.Origin = this.CloudParent.worldToLocalMatrix * this.Origin;
+			}
+
 			// Update our UnitSize to match the number of verts in our vertBuf
             // (when multiplied with ThreadSize, which should match the values in the shader)
 			if (count_ != forces_buf.count)
