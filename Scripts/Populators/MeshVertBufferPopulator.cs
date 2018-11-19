@@ -17,7 +17,7 @@ namespace Computils.Populators
         public MeshFilter MeshFilter;
         public MeshInterpretation Interpretation = MeshInterpretation.Triangles;
 		public Transform Transformer;
-      
+
 #if BOUNDING_BOX
 		[Header("Read-Only")]
 		public Vector3 BoundingBoxMin;
@@ -54,6 +54,7 @@ namespace Computils.Populators
             }
 		}
       
+#if BOUNDING_BOX
 		public IEnumerator LoadBoundingBox(Vector3[] verts) {
 			if (verts.Length == 0) yield break;
          
@@ -78,7 +79,8 @@ namespace Computils.Populators
                 batchIdx = 0;
             }
         }
-      
+#endif
+
 		public static IEnumerator LoadTriangleVerts(Mesh mesh, Vector3[] dest, Matrix4x4 transformMatrix) {
 			int[] vertIndices = mesh.GetTriangles(0);
 			uint count = (uint)Mathf.Min(vertIndices.Length, dest.Length);
