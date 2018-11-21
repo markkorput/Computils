@@ -28,6 +28,13 @@ float2 TexCoordFactorX;
 float2 TexCoordFactorY;
 float2 TexCoordFactorZ;
 
+float3 MinForceR;
+float3 MaxForceR;
+float3 MinForceG;
+float3 MaxForceG;
+float3 MinForceB;
+float3 MaxForceB;
+
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSTexForce(uint3 id : SV_DispatchThreadID)
 {
@@ -41,7 +48,14 @@ void CSTexForce(uint3 id : SV_DispatchThreadID)
         + pos.y * TexCoordFactorY
         + pos.z * TexCoordFactorZ;
 
-    float3 force = float3(0, length(tex[coords].rgb)-1.0, 0);
+
+    // float3 force = float3(0, length(tex[coords].rgb)-1.0, 0);
+    float3 clr = tex[coords].rgb;
+
+    float3 force =
+        MinForceR + (MaxForceR - MinForceR) * clr.r + 
+        MinForceG + (MaxForceG - MinForceG) * clr.g +
+        MinForceB + (MaxForceB - MinForceB) * clr.b;
 
     if (Additive) force += forces_buf[forceidx].force;
     forces_buf[forceidx].force = force;

@@ -559,6 +559,12 @@ MonoBehaviour:
   TexCoordFactorX: {x: 1, y: 0}
   TexCoordFactorY: {x: 0, y: 0}
   TexCoordFactorZ: {x: 0, y: 1}
+  MinForceR: {x: 0, y: -1, z: 0}
+  MaxForceR: {x: 0, y: 1, z: 0}
+  MinForceG: {x: 0, y: -1, z: 0}
+  MaxForceG: {x: 0, y: 1, z: 0}
+  MinForceB: {x: 0, y: -1, z: 0}
+  MaxForceB: {x: 0, y: 1, z: 0}
   DebugInfo:
     Count: 0
 --- !u!1 &1547463724

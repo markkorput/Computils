@@ -22,8 +22,14 @@ namespace Computils.Processors.Forces
 			public const string TexCoordFactorX = "TexCoordFactorX";
 			public const string TexCoordFactorY = "TexCoordFactorY";
 			public const string TexCoordFactorZ = "TexCoordFactorZ";
+			public const string MinForceR = "MinForceR";
+			public const string MinForceG = "MinForceG";
+			public const string MinForceB = "MinForceB";
+			public const string MaxForceR = "MaxForceR";
+            public const string MaxForceG = "MaxForceG";
+            public const string MaxForceB = "MaxForceB";         
 		}
-
+      
 		public ComputeShader Shader;
 		public Texture Texture;
 		public Transform ParticlesParent;
@@ -34,7 +40,15 @@ namespace Computils.Processors.Forces
 		public Vector2 TexCoordFactorX = new Vector2(1, 0); // by default the x coord of the particle determines the x part of the tex-coord
 		public Vector2 TexCoordFactorY = new Vector2(0, 0); // and the z coord of the particle determines the y part of the tex-coord
 		public Vector2 TexCoordFactorZ = new Vector2(0, 1);
-      
+
+		[Header("Tex Color To Force Directions")]
+		public Vector3 MinForceR;
+		public Vector3 MaxForceR;
+		public Vector3 MinForceG;
+        public Vector3 MaxForceG;
+		public Vector3 MinForceB;
+        public Vector3 MaxForceB;      
+
 		private int Kernel;
         private Vector2Int ThreadSize = new Vector2Int(4, 4);
         private uint count_ = 0;
@@ -57,7 +71,7 @@ namespace Computils.Processors.Forces
 		override public void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf)
         {
 			if (this.Texture == null) return;
-         
+			this.Texture.filterMode = FilterMode.Bilinear;
 			// Update our UnitSize to match the number of verts in our vertBuf
             // (when multiplied with ThreadSize, which should match the values in the shader)
 			if (count_ != forces_buf.count)
@@ -74,7 +88,7 @@ namespace Computils.Processors.Forces
 				//this.UnitRes = this.UnitSize;
 #endif
             }
-         
+
 			this.Shader.SetBuffer(Kernel, ShaderProps.positions_buf, positions_buf);
 			this.Shader.SetBuffer(Kernel, ShaderProps.forces_buf, forces_buf);
 			this.Shader.SetInt(ShaderProps.PositionsCount, positions_buf.count);
@@ -85,6 +99,13 @@ namespace Computils.Processors.Forces
 			this.Shader.SetVector(ShaderProps.TexCoordFactorX, this.TexCoordFactorX);
 			this.Shader.SetVector(ShaderProps.TexCoordFactorY, this.TexCoordFactorX);
 			this.Shader.SetVector(ShaderProps.TexCoordFactorZ, this.TexCoordFactorX);
+
+			this.Shader.SetVector(ShaderProps.MinForceR, this.MinForceR);
+			this.Shader.SetVector(ShaderProps.MinForceG, this.MinForceG);
+			this.Shader.SetVector(ShaderProps.MinForceB, this.MinForceB);
+			this.Shader.SetVector(ShaderProps.MaxForceR, this.MaxForceR);
+            this.Shader.SetVector(ShaderProps.MaxForceG, this.MaxForceG);
+            this.Shader.SetVector(ShaderProps.MaxForceB, this.MaxForceB);
          
 			this.Shader.SetTexture(Kernel, ShaderProps.Texture, this.Texture);
             this.Shader.Dispatch(Kernel, UnitSize.x, UnitSize.y, 1);
