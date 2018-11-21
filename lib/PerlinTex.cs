@@ -1,6 +1,7 @@
 ﻿// from: https://docs.unity3d.com/ScriptReference/Mathf.PerlinNoise.html
 
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 
 // Create a texture and fill it with Perlin noise.
@@ -16,10 +17,15 @@ public class PerlinTex : MonoBehaviour
     [Tooltip("Every (in units/second by which to increaed PerlinOffset every frame")]
 	public Vector2 PerlinScroll = new Vector2(1, 1);
    
+    [System.Serializable]
+	public class TexEvent : UnityEvent<Texture> {}
+
+	public TexEvent NewTexture;
+   
     private Texture2D noiseTex;
     private Color[] pix;
     //private Renderer rend;
-   
+
     void Start() 
     {
 		Renderer rend = GetComponent<Renderer>();
@@ -28,8 +34,10 @@ public class PerlinTex : MonoBehaviour
 		noiseTex = new Texture2D(this.Resolution.x, this.Resolution.y);
         pix = new Color[noiseTex.width * noiseTex.height];
         rend.material.mainTexture = noiseTex;
-    }
 
+		this.NewTexture.Invoke(noiseTex);
+    }
+   
     void CalcNoise()
     {
 		int idx = 0;

@@ -1,0 +1,48 @@
+﻿#pragma kernel CSTexForce
+
+// #pragma target 4.0
+
+#define thread_group_size_x 4
+#define thread_group_size_y 4
+
+struct Position
+{
+    float3 pos;
+};
+
+struct Force
+{
+    float3 force;
+};
+
+RWStructuredBuffer<Position> positions_buf;
+RWStructuredBuffer<Force> forces_buf;
+Texture2D<float4> tex;
+
+int PositionsCount;
+int ResolutionX;
+bool Additive;
+
+float2 TexCoordOrigin;
+float2 TexCoordFactorX;
+float2 TexCoordFactorY;
+float2 TexCoordFactorZ;
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSTexForce(uint3 id : SV_DispatchThreadID)
+{
+    const uint forceidx = id.x + id.y * ResolutionX;
+    uint posidx = forceidx;
+    if (posidx >= (uint)PositionsCount) return;
+
+    float3 pos = positions_buf[posidx].pos;
+    float2 coords = TexCoordOrigin
+        + pos.x * TexCoordFactorX
+        + pos.y * TexCoordFactorY
+        + pos.z * TexCoordFactorZ;
+
+    float3 force = float3(0, length(tex[coords].rgb)-1.0, 0);
+
+    if (Additive) force += forces_buf[forceidx].force;
+    forces_buf[forceidx].force = force;
+}
