@@ -19,7 +19,7 @@ public class PerlinTex : MonoBehaviour
    
     [System.Serializable]
 	public class TexEvent : UnityEvent<Texture> {}
-
+   
 	public TexEvent NewTexture;
    
     private Texture2D noiseTex;

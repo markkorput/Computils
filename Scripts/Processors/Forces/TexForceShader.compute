@@ -48,7 +48,6 @@ void CSTexForce(uint3 id : SV_DispatchThreadID)
         + pos.y * TexCoordFactorY
         + pos.z * TexCoordFactorZ;
 
-
     // float3 force = float3(0, length(tex[coords].rgb)-1.0, 0);
     float3 clr = tex[coords].rgb;
 

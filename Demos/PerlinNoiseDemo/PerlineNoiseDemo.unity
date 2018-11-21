@@ -556,9 +556,9 @@ MonoBehaviour:
   ParticlesParent: {fileID: 1547463727}
   Additive: 0
   TexCoordOrigin: {x: 0.5, y: 0.5}
-  TexCoordFactorX: {x: 1, y: 0}
+  TexCoordFactorX: {x: 0.1, y: 0}
   TexCoordFactorY: {x: 0, y: 0}
-  TexCoordFactorZ: {x: 0, y: 1}
+  TexCoordFactorZ: {x: 0, y: 0.1}
   MinForceR: {x: 0, y: -1, z: 0}
   MaxForceR: {x: 0, y: 1, z: 0}
   MinForceG: {x: 0, y: -1, z: 0}
