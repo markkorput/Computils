@@ -25,10 +25,6 @@ namespace Computils.Processors
 		public ComputeBufferFacade ForceFactors;
 		private ComputeBuffer dummyForcesBuf;
 
-		public KeyCode ToggleKey = KeyCode.None;
-
-		private bool toggleActive = true;
-
 		private void Start()
         {
 			this.Runner.Setup(ShaderProps.Kernel, 4, 4, ShaderProps.ResolutionX);         
@@ -37,7 +33,6 @@ namespace Computils.Processors
       
 		void Update()
         {
-			if (!toggleActive) return;
 			var forces_buf = ForcesFacade.GetValid();
 			var positions_buf = PositionsFacade.GetValid();
 
@@ -57,7 +52,7 @@ namespace Computils.Processors
                 }            
 			}
 		}
-      
+
 		public void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf, ComputeBuffer factors_buf = null)
         {
 			this.Runner.Shader.SetFloat(ShaderProps.DeltaTime, Time.deltaTime);
@@ -76,16 +71,5 @@ namespace Computils.Processors
          
 			this.Runner.Run(positions_buf, ShaderProps.positions_buf);
 		}
-
-		private void OnGUI()
-        {
-            Event evt = Event.current;
-            if (evt.isKey && Input.GetKeyDown(evt.keyCode)) this.OnKeyDown(evt);
-        }
-      
-        private void OnKeyDown(Event evt)
-        {
-			if (evt.keyCode == this.ToggleKey) this.toggleActive = !this.toggleActive;
-        }
     }
 }
