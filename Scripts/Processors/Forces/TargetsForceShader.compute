@@ -25,7 +25,8 @@ float Strength;
 bool Additive;
 int ResolutionX;
 float MinDistance;
-float ZeroDistance;
+float LinearFalloffRange;
+float CubicFalloffRange;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSTargets(uint3 id : SV_DispatchThreadID)
@@ -51,8 +52,13 @@ void CSTargets(uint3 id : SV_DispatchThreadID)
 
     float strengthFactor = Strength;
 
-    if (ZeroDistance > 0.0) {
-        strengthFactor -= strengthFactor * min(dist / ZeroDistance, 1.0);
+    if (LinearFalloffRange > 0.0) {
+        strengthFactor -= strengthFactor * min(dist / LinearFalloffRange, 1.0);
+    }
+
+    if (CubicFalloffRange > 0.0) {
+        float cubicDist = min(1.0, dist / CubicFalloffRange);
+        strengthFactor *= (1.0 - (cubicDist * cubicDist));
     }
 
     float3 force = forceDir * strengthFactor;

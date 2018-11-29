@@ -13,7 +13,8 @@ namespace Computils.Processors.Forces
 			public const string forces_buf = "forces_buf";
 			public const string targets_buf = "targets_buf";
 			public const string TargetsToWorldMatrix = "TargetsToWorldMatrix";
-			public const string ZeroDistance = "ZeroDistance";
+			public const string LinearFalloffRange = "LinearFalloffRange";
+			public const string CubicFalloffRange = "CubicFalloffRange";
          
 			public const string PositionsCount = "PositionsCount";
          
@@ -31,7 +32,8 @@ namespace Computils.Processors.Forces
 		public float Strength = 9.81f;
 		public float MinDistance = 0.1f;
 		[Tooltip("Optional, equal than or lower than zero; it's disabled, otherwise it specified the distance at which the strength of a the force of a target is zero")]
-		public float ZeroDistance = -1.0f;
+		public float LinearFalloffRange = -1.0f;
+		public float CubicFalloffRange = -1;
 		public bool Additive = false;      
 
 		private int Kernel;
@@ -79,7 +81,8 @@ namespace Computils.Processors.Forces
 			this.Shader.SetMatrix(ShaderProps.TargetsToWorldMatrix, this.TargetsParent != null ? this.TargetsParent.localToWorldMatrix : Matrix4x4.identity);
 			this.Shader.SetInt(ShaderProps.PositionsCount, positions_buf.count);
 			this.Shader.SetFloat(ShaderProps.Strength, this.Strength);
-			this.Shader.SetFloat(ShaderProps.ZeroDistance, this.ZeroDistance);
+			this.Shader.SetFloat(ShaderProps.LinearFalloffRange, this.LinearFalloffRange);
+			this.Shader.SetFloat(ShaderProps.CubicFalloffRange, this.CubicFalloffRange);
 			this.Shader.SetFloat(ShaderProps.MinDistance, this.MinDistance);
             this.Shader.SetInt(ShaderProps.ResolutionX, this.ThreadSize.x * this.UnitSize.x);
 			this.Shader.SetBool(ShaderProps.Additive, this.Additive);
