@@ -19,11 +19,13 @@ RWStructuredBuffer<Position> positions_buf;
 RWStructuredBuffer<Position> targets_buf;
 RWStructuredBuffer<Force> forces_buf;
 
+float4x4 TargetsToWorldMatrix;
 int PositionsCount;
 float Strength;
 bool Additive;
 int ResolutionX;
 float MinDistance;
+float ZeroDistance;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSTargets(uint3 id : SV_DispatchThreadID)
@@ -32,9 +34,12 @@ void CSTargets(uint3 id : SV_DispatchThreadID)
     if (forceidx >= (uint)PositionsCount) return;
 
     float3 pos = positions_buf[forceidx].pos;
-    float3 target = targets_buf[forceidx].pos;
+    // get target local position
+    float4 target = float4(targets_buf[forceidx].pos, 1);
+    // convert to world position
+    target = mul(TargetsToWorldMatrix, target);
 
-    float3 delta = target - pos;
+    float3 delta = target.xyz - pos;
     float dist = length(delta);
 
     float3 forceDir;
@@ -44,7 +49,13 @@ void CSTargets(uint3 id : SV_DispatchThreadID)
         forceDir = normalize(delta);
     }
 
-    float3 force = forceDir * Strength;
+    float strengthFactor = Strength;
+
+    if (ZeroDistance > 0.0) {
+        strengthFactor -= strengthFactor * min(dist / ZeroDistance, 1.0);
+    }
+
+    float3 force = forceDir * strengthFactor;
 
     if (Additive) force += forces_buf[forceidx].force;
     forces_buf[forceidx].force = force;

@@ -21,7 +21,7 @@ namespace Computils.Populators
 		{
 			if (AmountFacade != null)
 			{
-				AmountFacade.GetAsync().Then((amountbuf) =>
+				AmountFacade.GetValidAsync().Then((amountbuf) =>
 				{
 					this.Amount = amountbuf.count;
 					this.Populate(this.Amount, this.StartMinValue, this.StartMaxValue);
@@ -35,13 +35,13 @@ namespace Computils.Populators
 
 		private void Populate(int amount, float valmin, float valmax)
 		{
-			float[] data = GetData(amount, this.StartMinValue, this.StartMaxValue);
+			float[] data = GetData(amount, valmin, valmax);
 			var buf = Facade.GetValid();
 			buf = Utils.UpdateOrCreate(buf, data);
 			//ComputeBuffer buf = Utils.Create(data);         
 			Facade.Set(buf);
 		}
-      
+
 		private static float[] GetData(int amount, float valmin, float valmax)
 		{
 			float[] verts = new float[amount];
