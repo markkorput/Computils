@@ -8,7 +8,7 @@ using System.Collections;
 namespace Computils.Populators
 {
 	[AddComponentMenu("Computils/Populators/Sphere Verts Buffer Populator")]
-    class SpherePopulator : MonoBehaviour
+    public class SpherePopulator : MonoBehaviour
     {
         public ComputeBufferFacade Facade;
 		public int Amount = 10000;
@@ -23,8 +23,8 @@ namespace Computils.Populators
             ComputeBuffer buf = Utils.Create(verts);
             Facade.Set(buf);
         }
-      
-		private static Vector3[] GetVerts(int amount, Vector3 center, float radius) {
+
+		public static Vector3[] GetVerts(int amount, Vector3 center, float radius) {
 			Vector3[] verts = new Vector3[amount];
 			var rnd = new System.Random();
          

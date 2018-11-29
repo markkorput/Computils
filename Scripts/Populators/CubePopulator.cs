@@ -8,13 +8,13 @@ using System.Collections;
 namespace Computils.Populators
 {
 	[AddComponentMenu("Computils/Populators/Cube Verts Buffer Populator")]
-    class CubePopulator : MonoBehaviour
+    public class CubePopulator : MonoBehaviour
     {
         public ComputeBufferFacade Facade;
 		public int Amount = 10000;
 		public Vector3 Center;
 		public Vector3 Dimensions;
-
+      
 		private void OnEnable()
         {
             Vector3[] verts = null;
@@ -24,7 +24,7 @@ namespace Computils.Populators
             Facade.Set(buf);
         }
       
-		private static Vector3[] GetVerts(int amount, Vector3 center, Vector3 size) {
+		public static Vector3[] GetVerts(int amount, Vector3 center, Vector3 size) {
 			Vector3[] verts = new Vector3[amount];
 			var rnd = new System.Random();
 
