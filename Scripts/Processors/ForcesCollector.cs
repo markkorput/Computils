@@ -7,9 +7,11 @@ namespace Computils.Processors
     public class ForcesCollector : MonoBehaviour
     {
 		private static class ShaderProps {
-			public const string Kernel = "CSForces";
+			public const string ForcesToPositionsKernel = "CSApplyForcesToPositions";
+			public const string ForcesToVelocitiesKernel = "CSApplyForcesToVelocities";
 			public const string positions_buf = "positions_buf";
 			public const string forces_buf = "forces_buf";
+			public const string velocities_buf = "velocities_buf";
 			public const string factors_buf = "factors_buf";
 			public const string ResolutionX = "ResolutionX";
 			public const string DeltaTime = "DeltaTime";
@@ -18,6 +20,7 @@ namespace Computils.Processors
 
 		public ShaderRunner Runner;
 		public ComputeBufferFacade ForcesFacade;
+		public ComputeBufferFacade VelocitiesFacade;
 		public ComputeBufferFacade PositionsFacade;
         [Tooltip("Defaults to all Forces found in self and children")]
 		public Forces.Force[] Forces;
@@ -27,10 +30,15 @@ namespace Computils.Processors
 
 		private void Start()
         {
-			this.Runner.Setup(ShaderProps.Kernel, 4, 4, ShaderProps.ResolutionX);         
+			this.Runner.Setup(
+				this.VelocitiesFacade == null
+				    ? ShaderProps.ForcesToPositionsKernel
+				    : ShaderProps.ForcesToVelocitiesKernel,
+				4, 4, ShaderProps.ResolutionX);
+
 			if (this.Forces.Length == 0) this.Forces = GetComponentsInChildren<Forces.Force>();
         }
-      
+
 		void Update()
         {
 			var forces_buf = ForcesFacade.GetValid();
@@ -48,11 +56,24 @@ namespace Computils.Processors
 						force.Apply(forces_buf, positions_buf);
 					}
 
-					this.Apply(forces_buf, positions_buf, this.ForceFactors == null ? null : this.ForceFactors.GetValid());
+					if (this.VelocitiesFacade != null)
+					{
+						this.ApplyToVelocities(forces_buf, this.VelocitiesFacade.GetValid(), positions_buf, this.ForceFactors == null ? null : this.ForceFactors.GetValid());
+					}
+					else
+					{
+						this.Apply(forces_buf, positions_buf, this.ForceFactors == null ? null : this.ForceFactors.GetValid());
+					}
                 }            
 			}
 		}
 
+        /// <summary>
+        /// Applies Forces directly to positions
+        /// </summary>
+        /// <param name="forces_buf">Forces buffer.</param>
+        /// <param name="positions_buf">Positions buffer.</param>
+        /// <param name="factors_buf">Factors buffer.</param>      
 		public void Apply(ComputeBuffer forces_buf, ComputeBuffer positions_buf, ComputeBuffer factors_buf = null)
         {
 			this.Runner.Shader.SetFloat(ShaderProps.DeltaTime, Time.deltaTime);
@@ -70,6 +91,27 @@ namespace Computils.Processors
 			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.factors_buf, factors_buf);
          
 			this.Runner.Run(positions_buf, ShaderProps.positions_buf);
+		}
+      
+		public void ApplyToVelocities(ComputeBuffer forces_buf, ComputeBuffer velocities_buf, ComputeBuffer positions_buf, ComputeBuffer factors_buf = null) {
+			if (forces_buf == null || velocities_buf == null || positions_buf == null) return;
+
+			this.Runner.Shader.SetFloat(ShaderProps.DeltaTime, Time.deltaTime);
+            this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.forces_buf, forces_buf);
+			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.velocities_buf, velocities_buf);
+         
+            bool useFactors = factors_buf != null;
+            this.Runner.Shader.SetBool(ShaderProps.UseFactors, useFactors);
+         
+            if (factors_buf == null)
+            {
+                if (dummyForcesBuf == null) dummyForcesBuf = new ComputeBuffer(1, sizeof(float));
+                factors_buf = dummyForcesBuf;
+            }
+         
+            this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.factors_buf, factors_buf);
+
+            this.Runner.Run(positions_buf, ShaderProps.positions_buf);
 		}
     }
 }
