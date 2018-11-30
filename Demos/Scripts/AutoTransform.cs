@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Computils.Demos
 {
+	[System.Obsolete("Use FuseTools.AutoTransform...")]
 	public class AutoTransform : MonoBehaviour
 	{
 		[Tooltip("Defaults to this object's transform")]

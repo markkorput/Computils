@@ -21,13 +21,13 @@ namespace Computils.Populators
             return buffer;
         }
 
-		public static ComputeBuffer Create(Vector3[] data)
+		public static ComputeBuffer Create(Vector3[] data, int offset=0)
 		{
-			ComputeBuffer buffer = new ComputeBuffer(data.Length, sizeof(float) * 3);
-			buffer.SetData(data);
+			ComputeBuffer buffer = new ComputeBuffer(data.Length+offset, sizeof(float) * 3);
+			buffer.SetData(data, 0, offset, data.Length);
 			return buffer;         
 		}
-      
+
 		public static ComputeBuffer Create(Matrix4x4[] data)
         {
 			ComputeBuffer buffer = new ComputeBuffer(data.Length, sizeof(float) * 4 * 4);
@@ -44,7 +44,7 @@ namespace Computils.Populators
                 buf.SetData(data);
                 return buf;
             }
-         
+
             if (buf != null)
             {
                 buf.Release();
@@ -107,9 +107,27 @@ namespace Computils.Populators
                 buf.Dispose();
 				return Create(data);
             }
-
+         
 			buf.SetData(data);
 			return buf;
         }
+      
+		public static ComputeBuffer UpdateOrCreate(ComputeBuffer buf, Vector3[] data, int offset) {
+			int count = data.Length;
+
+			if (buf != null && buf.count >= (offset + data.Length))
+            {
+				buf.SetData(data, 0, offset, data.Length);
+                return buf;
+            }
+         
+            if (buf != null)
+            {
+                buf.Release();
+                buf.Dispose();            
+            }
+         
+            return Create(data, offset);
+		}
 	} 
 }
