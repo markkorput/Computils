@@ -120,7 +120,7 @@ namespace Computils.Populators
 				buf.SetData(data, 0, offset, data.Length);
                 return buf;
             }
-         
+
             if (buf != null)
             {
                 buf.Release();
@@ -128,6 +128,28 @@ namespace Computils.Populators
             }
          
             return Create(data, offset);
+		}
+
+		public static ComputeBuffer UpdateCircular(ComputeBuffer buf, Vector3[] data, int offset)
+		{
+			int count = data.Length;
+			int done = 0;
+
+			int srcOffset = 0;
+			int destOffset = offset;
+
+			while (done < count)
+			{
+				int batch = Mathf.Min((count-done), buf.count - offset);
+				buf.SetData(data, srcOffset, destOffset, batch);
+
+				done += batch;
+				srcOffset += batch;
+				destOffset += batch;
+				if (destOffset >= buf.count) destOffset = 0;
+			}
+         
+			return buf;
 		}
 	} 
 }
