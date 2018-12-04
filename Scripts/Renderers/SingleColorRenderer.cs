@@ -13,9 +13,12 @@ namespace Computils.Renderers
 			public const string buf_alphafactors = "buf_alphafactors";
 			public const string MainColor = "MainColor";
 			public const string UseAlphaFactors = "UseAlphaFactors";
+			public const string LocalToWorldMatrix = "LocalToWorldMatrix";
 		}
 
 		public ComputeBufferFacade VertsBufFacade;
+		[Tooltip("Optional; when set, its localToWorldMatrix is used to calculate vertex world positions")]
+		public Transform VertsParent;
 		[Tooltip("Optional; when set, it will use these factors as alpha multiplier")]
 		public ComputeBufferFacade AlphaFactorsFacade;
 		public Material RenderMaterial;
@@ -40,19 +43,20 @@ namespace Computils.Renderers
 
 			if (buf != null)
 			{
-				Render(this.RenderMaterial, buf, this.MeshTopology, this.MainColor, this.AlphaFactorsFacade == null ? null : this.AlphaFactorsFacade.GetValid());
+				Render(this.RenderMaterial, buf, this.VertsParent, this.MeshTopology, this.MainColor, this.AlphaFactorsFacade == null ? null : this.AlphaFactorsFacade.GetValid());
 #if UNITY_EDITOR
 				this.VertCount = buf.count;
 #endif
 			}
 		}
 
-		private static void Render(Material mat, ComputeBuffer vertsBuffer, MeshTopology topo, Color clr, ComputeBuffer alphaFactorsBuf = null)
+		private static void Render(Material mat, ComputeBuffer vertsBuffer, Transform Parent, MeshTopology topo, Color clr, ComputeBuffer alphaFactorsBuf = null)
 		{
 			mat.SetPass(0);
 			mat.SetBuffer(ShaderProps.buf_verts, vertsBuffer);
 			mat.SetColor(ShaderProps.MainColor, clr);
 			mat.SetInt(ShaderProps.UseAlphaFactors, alphaFactorsBuf == null ? 0 : 1);
+			mat.SetMatrix(ShaderProps.LocalToWorldMatrix, Parent == null ? Matrix4x4.identity : Parent.localToWorldMatrix);
 			if (alphaFactorsBuf != null) mat.SetBuffer(ShaderProps.buf_alphafactors, alphaFactorsBuf);
 
 			Graphics.DrawProcedural(topo, vertsBuffer.count);

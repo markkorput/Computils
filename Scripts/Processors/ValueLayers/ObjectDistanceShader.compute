@@ -21,6 +21,6 @@ void CSObjectDistance(uint3 id : SV_DispatchThreadID)
     float3 localpos = positions_buf[idx];
     float3 worldpos = mul(LocalToWorldMatrix, float4(localpos, 1.0)).xyz;
 
-    float3 dist = distance(worldpos, ObjectPosition);
+    float3 dist = distance(worldpos, ObjectPosition) - ObjectRadius;
     values_buf[idx] = dist;
 }

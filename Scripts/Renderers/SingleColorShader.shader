@@ -24,6 +24,7 @@ Shader "Computils/Single Color Shader"
             #include "UnityCG.cginc"
 
             float4 MainColor;
+            float4x4 LocalToWorldMatrix;
             int UseAlphaFactors;
 
             //The buffer containing the points we want to draw.
@@ -40,10 +41,11 @@ Shader "Computils/Single Color Shader"
             //which we transform with the view-projection matrix before passing to the pixel program.
             ps_input vert (uint id : SV_VertexID)
             {
-                float3 worldPos = buf_verts[id];
+                float3 localpos = buf_verts[id];
+                float4 worldPos = mul(LocalToWorldMatrix, float4(localpos, 1));
 
                 ps_input o;
-                o.pos = mul (UNITY_MATRIX_VP, float4(worldPos, 1.0f));
+                o.pos = mul (UNITY_MATRIX_VP, worldPos);
                 float alpha = MainColor.a;
                 if (UseAlphaFactors) alpha *= buf_alphafactors[id];
                 o.color = float4(MainColor.rgb, alpha);
