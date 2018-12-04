@@ -130,8 +130,10 @@ namespace Computils.Populators
             return Create(data, offset);
 		}
 
-		public static ComputeBuffer UpdateCircular(ComputeBuffer buf, Vector3[] data, int offset)
+		public static int UpdateCircular(ComputeBuffer buf, Vector3[] data, int offset)
 		{
+            // TODO; check if buf is initialized?
+
 			int count = data.Length;
 			int done = 0;
 
@@ -148,8 +150,8 @@ namespace Computils.Populators
 				destOffset += batch;
 				if (destOffset >= buf.count) destOffset = 0;
 			}
-         
-			return buf;
+
+			return destOffset;
 		}
 	} 
 }
