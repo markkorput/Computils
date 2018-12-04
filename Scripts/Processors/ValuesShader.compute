@@ -1,0 +1,43 @@
+﻿
+#pragma kernel CSOverwrite
+#pragma kernel CSAdd
+#pragma kernel CSSub
+#pragma kernel CSMultiply
+// #pragma target 4.0
+
+#define thread_group_size_x 4
+#define thread_group_size_y 4
+
+RWStructuredBuffer<float> dest_buf;
+RWStructuredBuffer<float> src_buf;
+
+int ResolutionX;
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSOverwrite(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+    dest_buf[idx] = src_buf[idx];
+}
+
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSAdd(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+    dest_buf[idx] += src_buf[idx];
+}
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSSub(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+    dest_buf[idx] -= src_buf[idx];
+}
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSMultiply(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+    dest_buf[idx] *= src_buf[idx];
+}

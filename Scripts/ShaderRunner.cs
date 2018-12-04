@@ -14,7 +14,7 @@ namespace Computils
 		public Vector2 Res;
 		public Vector2 UnitRes;
 #endif
-
+      
 		private int kernel_;
 		private Vector2Int threadSize_ = new Vector2Int(1, 1);
 		private uint count_ = 0;
@@ -24,6 +24,13 @@ namespace Computils
 		public int Kernel { get { return kernel_; } }
 		public string NameResolutionX { get { return resx_; } set { resx_ = value; }}
       
+		public static ShaderRunner Create(ComputeShader shader, string kernelName, uint resx, uint resy, string xresName) {
+			var runner = new ShaderRunner();
+			runner.Shader = shader;
+			runner.Setup(kernelName, resx, resy, xresName);
+			return runner;
+		}
+
 		public void Setup(string kernelName, uint threadsX, uint threadsY) {
 			this.threadSize_ = new Vector2Int((int)threadsX, (int)threadsY);
 			this.kernel_ = this.Shader.FindKernel(kernelName);
