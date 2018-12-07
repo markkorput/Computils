@@ -54,7 +54,7 @@
                 ps_input o;
                 o.pos = mul (UNITY_MATRIX_VP, float4(worldPos, 1.0f));
                 float alpha = MainColor.a;
-                if (UseAlphaFactors) alpha *= buf_alphafactors[id];
+                if (UseAlphaFactors) alpha *= buf_alphafactors[particleidx];
                 o.color = float4(MainColor.rgb, alpha);
                 return o;
             }

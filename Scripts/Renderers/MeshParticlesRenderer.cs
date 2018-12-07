@@ -24,9 +24,9 @@ namespace Computils.Renderers
 		public ComputeBufferFacade ParticlesPositionsFacade;
 		[Tooltip("Expects a buffer with float3 vertex position values (for example a buffer populated using MeshVertBufferPopulator)")]
 		public ComputeBufferFacade MeshFacade;
-		[Tooltip("Optional; when set, it will use these factors as alpha multiplier")]
+		[Tooltip("Optional; when set, it will use these factors as alpha multiplier, assuming an alpha value for each particle position")]
 		public ComputeBufferFacade AlphaFactorsFacade;
-		public Material RenderMaterial;
+        public Material RenderMaterial;
 		public MeshTopology MeshTopology = MeshTopology.Points;
 		public Color MainColor = new Color(1, 1, 1, 0.3f);
         [Tooltip("This transform's localToWolrd matrix will be used to transform particle positions")]
@@ -90,7 +90,7 @@ namespace Computils.Renderers
 			mat.SetColor(ShaderProps.MainColor, clr);
 			mat.SetInt(ShaderProps.UseAlphaFactors, alphaFactorsBuf == null ? 0 : 1);
 			mat.SetMatrix(ShaderProps.ParticleModelMatrix, particleModelMatrix);
-         
+
 			if (alphaFactorsBuf != null) mat.SetBuffer(ShaderProps.buf_alphafactors, alphaFactorsBuf);
 
 			int total_vert_count = partbuf.count * meshbuf.count;
