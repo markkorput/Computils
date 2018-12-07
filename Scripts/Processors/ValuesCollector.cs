@@ -58,11 +58,13 @@ namespace Computils.Processors
 		private void Start()
         {
 			if (this.Layers.Length == 0) {
-				this.Layers = (from comp in GetComponentsInChildren<ValueLayers.BaseValueLayer>()
-							   select new Layer(comp)).ToArray();
+				var list = new List<ValueLayers.BaseValueLayer>();
+				GetComponentsInChildren<ValueLayers.BaseValueLayer>(list);
+				list.Remove(this);
+				this.Layers = (from comp in list select new Layer(comp)).ToArray();            
 			}
         }
-
+      
 		void Update()
         {
 			var values_buf = this.ValuesFacade.GetValid();
