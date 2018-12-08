@@ -48,13 +48,14 @@ void CSMultiply(uint3 id : SV_DispatchThreadID)
 
 float FromMin, FromMax, ToMin, ToMax;
 bool Clamp;
+RWStructuredBuffer<float> mapSource_buf;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSMap(uint3 id : SV_DispatchThreadID)
 {
     const uint idx = id.x + id.y * ResolutionX;
 
-    float val = dest_buf[idx];
+    float val = mapSource_buf[idx];
     float factor = (val - FromMin) / (FromMax - FromMin);
     float newval = ToMin + (ToMax - ToMin) * factor;
     if (Clamp) newval = clamp(newval, ToMin, ToMax);
