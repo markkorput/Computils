@@ -24,13 +24,13 @@ namespace Computils
 		public int Kernel { get { return kernel_; } }
 		public string NameResolutionX { get { return resx_; } set { resx_ = value; }}
       
-		public static ShaderRunner Create(ComputeShader shader, string kernelName, uint resx, uint resy, string xresName) {
+		public static ShaderRunner Create(ComputeShader shader, string kernelName, uint resx, uint resy, string xresName=null) {
 			var runner = new ShaderRunner();
 			runner.Shader = shader;
 			runner.Setup(kernelName, resx, resy, xresName);
 			return runner;
 		}
-
+      
 		public void Setup(string kernelName, uint threadsX, uint threadsY) {
 			this.threadSize_ = new Vector2Int((int)threadsX, (int)threadsY);
 			this.kernel_ = this.Shader.FindKernel(kernelName);

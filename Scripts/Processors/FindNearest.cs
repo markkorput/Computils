@@ -81,7 +81,7 @@ namespace Computils.Processors
 			if (!RunnersInitialized) this.Start();
 
 			// CALCULATE (distances)
-
+         
 			this.distsBuf = Populators.Utils.UpdateOrCreate(this.distsBuf, new float[buf.count]);
             this.CalcRunner.Shader.SetBuffer(this.CalcRunner.Kernel, ShaderProps.distances_buf, distsBuf);
 			this.CalcRunner.Shader.SetVector(ShaderProps.Pos, pos);

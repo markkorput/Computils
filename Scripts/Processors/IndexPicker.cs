@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Computils.Processors
 {
@@ -22,17 +23,18 @@ namespace Computils.Processors
 		public ComputeBufferFacade Line;
 		public int[] ParticleIndices;
 		public ShaderRunner PickerRunner;
-
+      
 		public KeyCode RandomizeKey = KeyCode.R;
 
+		public UnityEvent OnPicked;
 		private ComputeBuffer indicesBuf;
-
+      
 		void Start()
 		{
 			PickerRunner.Setup(ShaderProps.Kernel, 4, 4);
 			PickerRunner.NameResolutionX = ShaderProps.ResolutionX;
 		}
-      
+
 		void Update()
 		{
 			var line_buf = Line.GetValid();
@@ -50,7 +52,7 @@ namespace Computils.Processors
          
 			this.Pick(pos_buf, line_buf, (from idx in ParticleIndices select (uint)idx).ToArray());
 		}
-      
+
 		public void Pick(ComputeBuffer particles_buf, ComputeBuffer selection_buf, uint[] indices)
 		{
 			this.indicesBuf = Populators.Utils.UpdateOrCreate(this.indicesBuf, indices);
@@ -58,8 +60,10 @@ namespace Computils.Processors
 			PickerRunner.Shader.SetBuffer(PickerRunner.Kernel, ShaderProps.IndicesBuf, this.indicesBuf);
 			PickerRunner.Shader.SetBuffer(PickerRunner.Kernel, ShaderProps.PositionsBuf, particles_buf);
 			PickerRunner.Run(selection_buf, ShaderProps.LineBuf);
-		}
 
+			this.OnPicked.Invoke();
+		}
+      
 		#region Public Methods
 		public void Pick(uint[] indexes) {
 			var partbuf = this.Particles.GetValid();
