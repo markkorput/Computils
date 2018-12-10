@@ -74,11 +74,11 @@ namespace Computils.Populators
          
             return Create(data);
         }
-
+      
 		public static ComputeBuffer UpdateOrCreate(ComputeBuffer buf, uint[] data)
         {
             int count = data.Length;
-         
+
             if (buf != null && buf.count == count)
             {
                 buf.SetData(data);
