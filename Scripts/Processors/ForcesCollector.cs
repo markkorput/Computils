@@ -103,9 +103,9 @@ namespace Computils.Processors
 			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.factors_buf, factors_buf);
 
 			this.Runner.Shader.SetBool(ShaderProps.UseMasses, masses_buf != null);
-			if (masses_buf != null) this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.masses_buf, masses_buf);
+			//if (masses_buf != null) this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.masses_buf, masses_buf);
+			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.masses_buf, masses_buf != null ? masses_buf : factors_buf);
 
-         
 			this.Runner.Run(positions_buf, ShaderProps.positions_buf);
 		}
 
@@ -128,7 +128,8 @@ namespace Computils.Processors
             this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.factors_buf, factors_buf);
          
 			this.Runner.Shader.SetBool(ShaderProps.UseMasses, masses_buf != null);
-            if (masses_buf != null) this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.masses_buf, masses_buf);
+            //if (masses_buf != null) this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.masses_buf, masses_buf);
+			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.masses_buf, masses_buf != null ? masses_buf : factors_buf);
          
             this.Runner.Run(positions_buf, ShaderProps.positions_buf);
 		}
