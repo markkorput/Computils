@@ -171,7 +171,7 @@ namespace Computils
 			if (shader == null) return;
          
 			// kernel
-            if (opts.KernelName != null) this.kernel_ = this.Shader.FindKernel(opts.KernelName);
+            if (opts.KernelName != null) this.kernel_ = shader.FindKernel(opts.KernelName);
 			//if (this.kernel_ == null) return;
 
 			// execution/threading details
