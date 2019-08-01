@@ -1,5 +1,5 @@
-﻿#pragma kernel CSForces
-
+﻿#pragma kernel CSApplyForcesToPositions
+#pragma kernel CSApplyForcesToVelocities
 // #pragma target 4.0
 
 #define thread_group_size_x 4
@@ -17,17 +17,40 @@ struct Force
 
 RWStructuredBuffer<Position> positions_buf;
 RWStructuredBuffer<Force> forces_buf;
+RWStructuredBuffer<float3> velocities_buf;
 RWStructuredBuffer<float> factors_buf;
+RWStructuredBuffer<float> masses_buf;
 
 int ResolutionX;
 float DeltaTime;
 bool UseFactors;
+bool UseMasses;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
-void CSForces(uint3 id : SV_DispatchThreadID)
+void CSApplyForcesToPositions(uint3 id : SV_DispatchThreadID)
 {
     const uint idx = id.x + id.y * ResolutionX;
-    float3 delta = forces_buf[idx].force * DeltaTime;
-    if (UseFactors) delta *= factors_buf[idx];
+    float3 force = forces_buf[idx].force * DeltaTime;
+    float mass = UseMasses ? masses_buf[idx] : 1.0f;
+    float3 acceleration = force / mass;
+    if (UseFactors) acceleration *= factors_buf[idx];
+    positions_buf[idx].pos += acceleration;
+}
+
+[numthreads (thread_group_size_x, thread_group_size_y, 1)]
+void CSApplyForcesToVelocities(uint3 id : SV_DispatchThreadID)
+{
+    const uint idx = id.x + id.y * ResolutionX;
+
+    float3 force = forces_buf[idx].force * DeltaTime;
+    float mass = UseMasses ? masses_buf[idx] : 1.0f;
+    float3 acceleration = force / mass;
+    if (UseFactors) acceleration *= factors_buf[idx];
+
+    float3 velocity = velocities_buf[idx];
+    velocity += acceleration;
+    velocities_buf[idx] = velocity;
+
+    float3 delta = velocity * DeltaTime;
     positions_buf[idx].pos += delta;
 }

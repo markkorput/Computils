@@ -14,6 +14,8 @@ namespace Computils.Processors
 
 			public const string Pos = "Pos";
 			public const string BlacklistLength = "BlacklistLength";
+			public const string DistancesCount = "DistancesCount";
+
 			public const string positions_buf = "positions_buf";
 			public const string distances_buf = "distances_buf";
 			public const string index_feedback_buf = "index_feedback_buf";
@@ -30,7 +32,7 @@ namespace Computils.Processors
 
 		public ShaderRunner CalcRunner;
 		public ShaderRunner FindRunner;
-      
+
 #if UNITY_EDITOR
 		public ComputeBufferFacade Particles;      
         public Transform PositionTransform;
@@ -51,11 +53,9 @@ namespace Computils.Processors
 
 		void Start()
         {
-			CalcRunner.Setup(ShaderProps.CalcKernel, 4, 4);
-			CalcRunner.NameResolutionX = ShaderProps.ResolutionX;
-         
-            FindRunner.Setup(ShaderProps.FindKernel, 1, 1);
-            FindRunner.NameResolutionX = ShaderProps.ResolutionX;
+			CalcRunner.Setup(ShaderProps.CalcKernel, 4, 4, ShaderProps.ResolutionX);
+			FindRunner.Setup(ShaderProps.FindKernel, 1, 1, ShaderProps.ResolutionX);
+
 			RunnersInitialized = true;
         }
 
@@ -89,9 +89,9 @@ namespace Computils.Processors
             this.CalcRunner.Run(buf, ShaderProps.positions_buf);
 
 			// FIND NEAREST
-
+         
 			// var nearest = GetNearestCPU(buf, distsBuf);
-			var nearest = GetNearestGPU(buf, blacklistIndices);
+			var nearest = GetNearestGPU(buf, this.distsBuf, blacklistIndices);
          
 #if UNITY_EDITOR
             this.Pos = pos;
@@ -112,7 +112,7 @@ namespace Computils.Processors
 			bool isFirst = true;
 			float closestDist = 0.0f;
 			uint closestIdx = 0;
-         
+
 			for (uint i = 0; i < (uint)distancesBuf.count; i++) {
 				if (bList.Contains(i)) continue;
                 
@@ -135,11 +135,11 @@ namespace Computils.Processors
 			return isFirst ? null : new NearestItem(closestIdx, closestDist, new Vector3(0, 0, 0)); // TODO; we don't have the position here
 		}
 
-		private NearestItem GetNearestGPU(ComputeBuffer buf, uint[] blacklistIndices = null) {
+		private NearestItem GetNearestGPU(ComputeBuffer buf, ComputeBuffer distsBuf, uint[] blacklistIndices = null) {
 			// 0 = distance, 1 = pos.x, 2 = pos.y, 3 = pos.z, 4 = considered count
 			distanceFeedbackBuf = Populators.Utils.UpdateOrCreate(this.distanceFeedbackBuf, new float[] { 9999.0f, 0.0f, 0.0f, 0.0f, 0.0f }); 
             indexFeedbackBuf = Populators.Utils.UpdateOrCreate(this.indexFeedbackBuf, new uint[] { 0 });
-
+         
             // blacklist
             int blacklistLength = blacklistIndices == null ? 0 : blacklistIndices.Length;
             if (blacklistLength > 0)
@@ -147,16 +147,22 @@ namespace Computils.Processors
                 blacklistBuf = Populators.Utils.UpdateOrCreate(this.blacklistBuf, blacklistIndices == null ? new uint[0] : blacklistIndices);
                 this.FindRunner.Shader.SetBuffer(this.FindRunner.Kernel, ShaderProps.blacklist_buf, blacklistBuf);
             }
-         
+
             this.FindRunner.Shader.SetInt(ShaderProps.BlacklistLength, blacklistLength);
+
             this.FindRunner.Shader.SetBuffer(this.FindRunner.Kernel, ShaderProps.distances_buf, distsBuf);
             this.FindRunner.Shader.SetBuffer(this.FindRunner.Kernel, ShaderProps.feedback_buf, distanceFeedbackBuf);
             this.FindRunner.Shader.SetBuffer(this.FindRunner.Kernel, ShaderProps.index_feedback_buf, indexFeedbackBuf);
-         
+
             // execute finder kernel
-            this.FindRunner.Run(buf, ShaderProps.positions_buf);
+			this.FindRunner.Run(buf, ShaderProps.positions_buf);         
 
 
+            // on run
+			// this.FindRunner.Shader.SetInt(ShaderProps.DistancesCount, distsBuf.count);
+			// this.FindRunner.Run(buf, ShaderProps.positions_buf);
+
+         
             // fetch results
             uint[] indexes = new uint[1];
             indexFeedbackBuf.GetData(indexes);

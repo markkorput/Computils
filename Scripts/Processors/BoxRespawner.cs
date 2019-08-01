@@ -16,12 +16,16 @@ namespace Computils.Processors
 			public const string MaxAge = "MaxAge";
 			public const string MaxAgeVariation = "MaxAgeVariation";
 			public const string BoxMatrix = "BoxMatrix";
+			public const string ParentMatrix = "ParentMatrix";
 		}
       
 		public ComputeBufferFacade Particles;
 		public ComputeBufferFacade BirthTimes;
 		public float MaxAge = 5.0f;
 		public float MaxAgeVariation = 1.0f;
+		[Tooltip("This Transform is considered the \"parent\" of any (re-)spawned particle, meaning its worldToLocalMatrix is applied to every spawn position")]
+		public Transform Parent;
+		[Tooltip("This Transform's localToWorldMatrix is used to multiply random positions between [-0.5,-0.5,-0.5] and [0.5,0.5,0.5] when (re-)spawning a particle")]
 		public Transform BoxTranform;
       
 		public ShaderRunner Runner;
@@ -47,8 +51,9 @@ namespace Computils.Processors
 			this.Runner.Shader.SetFloat(ShaderProps.MaxAge, this.MaxAge);
 			this.Runner.Shader.SetFloat(ShaderProps.MaxAgeVariation, this.MaxAgeVariation);
 			this.Runner.Shader.SetMatrix(ShaderProps.BoxMatrix, this.BoxTranform.localToWorldMatrix);
+			this.Runner.Shader.SetMatrix(ShaderProps.ParentMatrix, this.Parent == null ? Matrix4x4.identity : this.Parent.worldToLocalMatrix);
 			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.BirthTimesBuffer, birthsBuf);
-         
+
             // run
 			this.Runner.Run(particlesBuf, ShaderProps.ParticlesBuffer);
 		}

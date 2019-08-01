@@ -1,6 +1,6 @@
 ﻿#pragma kernel CSCalcDists
 #pragma kernel CSFindNearest
-
+#pragma kernel CSFindNearestOneRun
 // #pragma target 4.0
 
 #define thread_group_size_x 4
@@ -53,4 +53,43 @@ void CSFindNearest(uint3 id : SV_DispatchThreadID)
         feedback_buf[3] = p.z;
         feedback_buf[4] = feedback_buf[4] + 1.0;
     }
+}
+
+int DistancesCount;
+
+[numthreads (1, 1, 1)]
+void CSFindNearestOneRun(uint3 id : SV_DispatchThreadID)
+{
+    // const uint idx = id.x + id.y * ResolutionX;
+    float closestdist = feedback_buf[0];
+    uint closestidx = 0;
+
+    for (int idx=0; idx<DistancesCount; idx++) {
+        // when blacklisted, don't consider
+        bool blacklisted = false;
+        for(int i=0; i<BlacklistLength; i++) {
+            if (blacklist_buf[i] == (uint)idx) {
+                blacklisted = true;
+                break;
+            }
+        }
+
+        if (!blacklisted) {
+            float dist = distances_buf[idx];
+            // float closestdist = feedback_buf[0]; //.dist;
+
+            if (dist < closestdist) {
+                closestdist = dist;
+                closestidx = idx;
+            }
+        }
+    }
+
+    float3 p = positions_buf[closestidx].pos;
+    index_feedback_buf[0] = closestidx;
+    feedback_buf[0] = closestdist;
+    feedback_buf[1] = p.x;
+    feedback_buf[2] = p.y;
+    feedback_buf[3] = p.z;
+    feedback_buf[4] = DistancesCount;
 }

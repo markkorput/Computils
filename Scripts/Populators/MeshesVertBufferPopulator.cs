@@ -27,7 +27,7 @@ namespace Computils.Populators
         private void OnEnable()
         {
             Vector3[] verts = null;
-
+         
             if (this.Interpretation.Equals(MeshInterpretation.Vertices))
                 verts = GetVerts(this.ScaleFactor);
 
@@ -82,7 +82,7 @@ namespace Computils.Populators
 
             return data;
         }
-
+      
         private Vector3[] GetTriangleVerts(float ScaleFactor)
         {
 			int ttl = 0;

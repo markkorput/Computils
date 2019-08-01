@@ -10,10 +10,14 @@ namespace Computils.Populators
 	[AddComponentMenu("Computils/Populators/Floats Buffer Populator")]
 	class FloatPopulator : MonoBehaviour
 	{
+		[Tooltip("Required; the target buffer that we'll populate")]
 		public ComputeBufferFacade Facade;
 		[Tooltip("Optional; source buffer who's amount we'll match (has priority over our Amount attribute")]
 		public ComputeBufferFacade AmountFacade;
+		[Tooltip("This amount is ignored and will be overwritten if the AmountFacade is initialized")]
 		public int Amount = 10000;
+
+		[Header("Values Options")]
 		public float StartMinValue = 0;
 		public float StartMaxValue = 0;
 
@@ -21,7 +25,7 @@ namespace Computils.Populators
 		{
 			if (AmountFacade != null)
 			{
-				AmountFacade.GetAsync().Then((amountbuf) =>
+				AmountFacade.GetValidAsync().Then((amountbuf) =>
 				{
 					this.Amount = amountbuf.count;
 					this.Populate(this.Amount, this.StartMinValue, this.StartMaxValue);
@@ -35,13 +39,13 @@ namespace Computils.Populators
 
 		private void Populate(int amount, float valmin, float valmax)
 		{
-			float[] data = GetData(amount, this.StartMinValue, this.StartMaxValue);
+			float[] data = GetData(amount, valmin, valmax);
 			var buf = Facade.GetValid();
 			buf = Utils.UpdateOrCreate(buf, data);
 			//ComputeBuffer buf = Utils.Create(data);         
 			Facade.Set(buf);
 		}
-      
+
 		private static float[] GetData(int amount, float valmin, float valmax)
 		{
 			float[] verts = new float[amount];

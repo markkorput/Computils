@@ -23,6 +23,7 @@ float Time;
 float MaxAge;
 float MaxAgeVariation;
 float4x4 BoxMatrix;
+float4x4 ParentMatrix;
 
 
 float rand(float2 co, float maxval){
@@ -43,7 +44,8 @@ void CSRespawn(uint3 id : SV_DispatchThreadID)
     float maxage = MaxAge + rand((float2)id, MaxAgeVariation) - MaxAgeVariation * 0.5;
     if (age < maxage) return;
 
-    float3 pos = (float3)mul(BoxMatrix, float4(randPos(positions_buf[idx].pos + id).xyz, 1.0));
-    positions_buf[idx].pos = pos;
+    float4 worldpos = mul(BoxMatrix, float4(randPos(positions_buf[idx].pos + id).xyz, 1.0));
+    float3 localpos = (float3)mul(ParentMatrix, worldpos);
+    positions_buf[idx].pos = localpos;
     times_buf[idx].time = Time;
 }

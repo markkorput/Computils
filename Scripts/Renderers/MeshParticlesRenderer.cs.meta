@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bf77a47a01fe04cd08c12e60e2f911b7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ParticlesPositionsFacade: {instanceID: 0}
+  - MeshFacade: {instanceID: 0}
+  - AlphaFactorsFacade: {instanceID: 0}
+  - RenderMaterial: {fileID: 2100000, guid: cea64327331744676aa25bcb6893405b, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
