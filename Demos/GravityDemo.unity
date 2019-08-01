@@ -864,6 +864,8 @@ MonoBehaviour:
     Res: {x: 0, y: 0}
     UnitRes: {x: 0, y: 0}
   ForcesFacade: {fileID: 1081871663}
+  VelocitiesFacade: {fileID: 0}
+  MassesFacade: {fileID: 0}
   PositionsFacade: {fileID: 1467028625}
   Forces:
   - {fileID: 165580325}
@@ -874,7 +876,6 @@ MonoBehaviour:
   - {fileID: 612394277}
   - {fileID: 42084635}
   ForceFactors: {fileID: 0}
-  ToggleKey: 0
 --- !u!114 &1081871663 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114239977061053322, guid: b238bd9f039b44207852b4b3551a7340,
@@ -1046,7 +1047,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Facade: {fileID: 1467028625}
+  AmountFacade: {fileID: 0}
   Amount: 30000
+  SpawnOnEnable: 1
   Center: {x: 0, y: 0, z: 0}
   Dimensions: {x: 3, y: 3, z: 3}
 --- !u!4 &1285023772

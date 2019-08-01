@@ -10,10 +10,14 @@ namespace Computils.Populators
 	[AddComponentMenu("Computils/Populators/Floats Buffer Populator")]
 	class FloatPopulator : MonoBehaviour
 	{
+		[Tooltip("Required; the target buffer that we'll populate")]
 		public ComputeBufferFacade Facade;
 		[Tooltip("Optional; source buffer who's amount we'll match (has priority over our Amount attribute")]
 		public ComputeBufferFacade AmountFacade;
+		[Tooltip("This amount is ignored and will be overwritten if the AmountFacade is initialized")]
 		public int Amount = 10000;
+
+		[Header("Values Options")]
 		public float StartMinValue = 0;
 		public float StartMaxValue = 0;
 
