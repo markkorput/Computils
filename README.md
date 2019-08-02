@@ -1,7 +1,7 @@
 # Computils
 Compute Shader tools for Unity
 
-_Only tested on Mac with Unity 2018.2.16f1_
+_Only tested on Mac with Unity 2018.2.11f1, 2018.2.16f1 and 2019.2.0f1_
 
 ## Installation
 
