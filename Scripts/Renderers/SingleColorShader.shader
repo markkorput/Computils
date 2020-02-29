@@ -35,6 +35,7 @@ Shader "Computils/Single Color Shader"
             struct ps_input {
                 float4 pos : SV_POSITION;
                 float4 color : TEXCOORD0;
+                float psize : PSIZE;
             };
 
             //Our vertex function simply fetches a point from the buffer corresponding to the vertex index
@@ -49,6 +50,7 @@ Shader "Computils/Single Color Shader"
                 float alpha = MainColor.a;
                 if (UseAlphaFactors) alpha *= buf_alphafactors[id];
                 o.color = float4(MainColor.rgb, alpha);
+                o.psize = 1;
                 return o;
             }
 
