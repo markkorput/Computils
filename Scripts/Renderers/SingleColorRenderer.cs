@@ -59,7 +59,7 @@ namespace Computils.Renderers
 			mat.SetMatrix(ShaderProps.LocalToWorldMatrix, Parent == null ? Matrix4x4.identity : Parent.localToWorldMatrix);
 			if (alphaFactorsBuf != null) mat.SetBuffer(ShaderProps.buf_alphafactors, alphaFactorsBuf);
 
-			Graphics.DrawProcedural(topo, vertsBuffer.count);
+			Graphics.DrawProceduralNow(topo, vertsBuffer.count);
 		}
 
 		#region Public Methods

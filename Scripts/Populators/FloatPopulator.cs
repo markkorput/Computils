@@ -25,11 +25,11 @@ namespace Computils.Populators
 		{
 			if (AmountFacade != null)
 			{
-				AmountFacade.GetValidAsync().Then((amountbuf) =>
+				AmountFacade.GetValidAsync((amountbuf) =>
 				{
 					this.Amount = amountbuf.count;
 					this.Populate(this.Amount, this.StartMinValue, this.StartMaxValue);
-				}).Done();
+				});
 			}
 			else
 			{

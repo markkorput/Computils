@@ -66,7 +66,7 @@ namespace Computils.Renderers
 			//mat.SetInt(ShaderProps.UseAlphaFactors, alphaFactorsBuf == null ? 0 : 1);
 			//if (alphaFactorsBuf != null) mat.SetBuffer(ShaderProps.buf_alphafactors, alphaFactorsBuf);
          
-            Graphics.DrawProcedural(topo, valuesBuf.count);
+            Graphics.DrawProceduralNow(topo, valuesBuf.count);
         }
       
 		private Matrix4x4 TransMat { get {

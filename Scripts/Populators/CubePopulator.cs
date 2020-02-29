@@ -26,11 +26,11 @@ namespace Computils.Populators
 
 			if (AmountFacade != null)
 			{
-				AmountFacade.GetValidAsync().Then((amountbuf) =>
+				AmountFacade.GetValidAsync((amountbuf) =>
 				{
 					this.Amount = amountbuf.count;
 					this.Populate(GetVerts(this.Amount, this.Center, this.Dimensions));
-				}).Done();
+				});
 			}
 			else
 			{

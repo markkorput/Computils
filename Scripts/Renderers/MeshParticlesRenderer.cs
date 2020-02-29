@@ -94,7 +94,7 @@ namespace Computils.Renderers
 			if (alphaFactorsBuf != null) mat.SetBuffer(ShaderProps.buf_alphafactors, alphaFactorsBuf);
 
 			int total_vert_count = partbuf.count * meshbuf.count;
-			Graphics.DrawProcedural(topo, total_vert_count);
+			Graphics.DrawProceduralNow(topo, total_vert_count);
 		}
 
 		#region Public Methods
