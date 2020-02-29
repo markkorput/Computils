@@ -64,6 +64,13 @@ namespace Computils.Populators
 		{
 			this.Populate(this.Amount, this.StartMaxValue, this.StartMinValue);
 		}
+
+		public void PopulateWithNewAmount() {
+			var amountbuf = this.AmountFacade.GetValid();
+			if (amountbuf == null) return;
+			this.Amount = amountbuf.count;
+			this.Populate(this.Amount, this.StartMaxValue, this.StartMinValue);
+		}
 		#endregion
 	}
 }

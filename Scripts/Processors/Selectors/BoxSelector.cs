@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Computils.Selectors
 {
-	public class InfinitePlaneSelector : MonoBehaviour
+	public class BoxSelector : MonoBehaviour
 	{
 		private static class ShaderProps {
 			public const string Kernel = "CSLoadSelectFactors";
@@ -12,7 +12,9 @@ namespace Computils.Selectors
 			public const string factors_buf = "factors_buf";         
 			public const string ResolutionX = "ResolutionX";
 			public const string AlignMat = "AlignMat";
-			public const string Falloff = "Falloff";
+			public const string Min = "Min";
+			public const string Max = "Max";
+			// public const string Falloff = "Falloff";
 		}
       
 		public ShaderRunner Runner;
@@ -21,8 +23,8 @@ namespace Computils.Selectors
 		[Tooltip("A buffer of single float values that should have the same length (or longer) as the Positions buffer and will receive a normalised the selector factor (0.0-1.0) for each position")]
 		public ComputeBufferFacade Factors;
       
-		public Transform PlaneTransform;
-		public float Falloff;
+		public Transform Root;
+		public BoxCollider Box;
 
 		void Start()
 		{
@@ -38,9 +40,14 @@ namespace Computils.Selectors
 		}
 
 		public void UpdateSelectFactors(ComputeBuffer positions, ComputeBuffer factors) {
+			Vector3 halfSize = Box.size * 0.5f;
+			Vector3 Min = Box.center - halfSize;
+			Vector3 Max = Box.center + halfSize;
+
 			Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.factors_buf, factors);
-			Runner.Shader.SetMatrix(ShaderProps.AlignMat, this.PlaneTransform.worldToLocalMatrix);
-			Runner.Shader.SetFloat(ShaderProps.Falloff, this.Falloff);
+			Runner.Shader.SetMatrix(ShaderProps.AlignMat, this.Root.worldToLocalMatrix);
+			Runner.Shader.SetVector(ShaderProps.Min, Min);
+			Runner.Shader.SetVector(ShaderProps.Max, Max);
 			Runner.Run(positions, ShaderProps.positions_buf);
 		}
 	}

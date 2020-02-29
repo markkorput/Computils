@@ -18,7 +18,9 @@ namespace Computils.Processors.ValueLayers
 		}
 
 		public ComputeShader Shader;
+		public Vector2Int ThreadSize = new Vector2Int(4,4);
 		public ComputeBufferFacade PositionsFacade;
+		public ComputeBufferFacade ValuesFacade;
 		[Tooltip("Optional; its localToWorldMatrix will be used to calculate each particle's world position")]
 		public Transform ParticlesParent;
 		public Transform Object;
@@ -33,7 +35,7 @@ namespace Computils.Processors.ValueLayers
 
 			if (this.Runner == null)
 			{
-				this.Runner = ShaderRunner.Create(this.Shader, ShaderProps.Kernel, 4, 4, ShaderProps.ResolutionX);
+				this.Runner = ShaderRunner.Create(this.Shader, ShaderProps.Kernel, (uint)ThreadSize.x, (uint)ThreadSize.y, ShaderProps.ResolutionX);
 			}
 
 			this.Runner.Shader.SetFloat(ShaderProps.ObjectRadius, this.ObjectRadius);
@@ -44,6 +46,7 @@ namespace Computils.Processors.ValueLayers
 			this.Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.positions_buf, positions_buf);
 
 			this.Runner.Run(values_buf, ShaderProps.values_buf);
+			Debug.Log("ObjectDistance ran");
 		}
 
 		private ShaderRunner CreateRunner()
@@ -54,7 +57,7 @@ namespace Computils.Processors.ValueLayers
 			return ShaderRunner.Create(
 				new ShaderRunner.Opts()
 					.Program(this.Shader, ShaderProps.Kernel)
-					.Threading(4, 4, ShaderProps.ResolutionX)
+					.Threading((uint)ThreadSize.x, (uint)ThreadSize.y, ShaderProps.ResolutionX)
 					.MainBufferName(ShaderProps.values_buf)
 					.Var(ShaderProps.ObjectRadius, () => this.ObjectRadius)
 					.Var(ShaderProps.ObjectPosition, () => this.Object.position)
@@ -69,8 +72,25 @@ namespace Computils.Processors.ValueLayers
 
 		public override void Apply(ComputeBuffer values_buf)
 		{
-			if (this.Runner == null) this.Runner = this.CreateRunner();
+			if (this.Runner == null) {
+				Debug.Log("Init runner");
+				this.Runner = this.CreateRunner();
+			}
 			if (this.Runner != null) this.Runner.Run(values_buf);
+		}
+
+		public void Apply(ComputeBufferFacade valFacade) {
+			var buf = valFacade == null ? null : valFacade.GetValid();
+			if (buf == null) return;
+			Apply(buf);
+		}
+
+		public void Apply() {
+			this.Apply(this.ValuesFacade);
+		}
+
+		public void Reset() {
+			this.Runner = null;
 		}
 
 		#region Public Action Methods

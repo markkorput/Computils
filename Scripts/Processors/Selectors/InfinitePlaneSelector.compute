@@ -8,7 +8,7 @@ int ResolutionX;
 float4x4 AlignMat;
 float Falloff;
 
-[numthreads(4,4,1)]
+[numthreads(8,8,1)]
 void CSLoadSelectFactors (uint3 id : SV_DispatchThreadID)
 {
     const uint idx = id.x + id.y * ResolutionX;
