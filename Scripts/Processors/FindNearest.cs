@@ -46,6 +46,10 @@ namespace Computils.Processors
 		[System.Serializable]
 		public class NearestEvent : UnityEvent<NearestItem> {}
 		public NearestEvent OnNearest = new NearestEvent();
+		[System.Serializable]
+		public class Vector3Event : UnityEvent<Vector3> {}
+		public Vector3Event OnNearestPosition = new Vector3Event();
+
 
 #if UNITY_EDITOR
 		[Header("Read-Only")]
@@ -107,11 +111,23 @@ namespace Computils.Processors
 		}
 
 		public void InvokeNearestBasedOnValues(ComputeBufferFacade valuesFacade) {
+			var nearestItem = GetNearestBasedOnValues(valuesFacade);
+			if (nearestItem != null)
+				this.OnNearest.Invoke(nearestItem);
+		}
+
+		public void InvokeNearestPositionBasedOnValues(ComputeBufferFacade valuesFacade) {
+			var nearestItem = GetNearestBasedOnValues(valuesFacade);
+			if (nearestItem != null)
+				this.OnNearestPosition.Invoke(nearestItem.pos);	
+		}
+
+		public NearestItem GetNearestBasedOnValues(ComputeBufferFacade valuesFacade) {
 			var valuesBuf = valuesFacade.GetValid();
-			if (valuesBuf == null) return;
+			if (valuesBuf == null) return null;
 
 			var buf = this.Particles != null ? this.Particles.GetValid() : null;
-			if (buf == null) return;
+			if (buf == null) return null;
 
 			var nearest = GetNearestCPU(buf, valuesBuf);
 
@@ -121,9 +137,9 @@ namespace Computils.Processors
 					this.ClosestDist = nearest.distance;
 					this.ClosestPos = nearest.pos;
 				#endif
-
-				this.OnNearest.Invoke(nearest);
 			}
+
+			return nearest;
 		}
 
 		private NearestItem GetNearestCPU(ComputeBuffer positionsBuf, ComputeBuffer distancesBuf, uint[] blacklistIndices = null) {         
