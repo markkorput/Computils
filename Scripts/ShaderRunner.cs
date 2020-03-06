@@ -119,6 +119,10 @@ namespace Computils
       
 		public void Setup(string kernelName, uint threadsX, uint threadsY) {
 			this.threadSize_ = new Vector2Int((int)threadsX, (int)threadsY);
+			if (this.Shader == null) {
+				Debug.LogWarning("ShaderRunner: no shader");
+				return;
+			}
 			this.kernel_ = this.Shader.FindKernel(kernelName);
 		}
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Computils.Selectors
 {
@@ -32,6 +33,8 @@ namespace Computils.Selectors
 		public bool Additive = false;
 		public bool OnUpdate = true;
 
+		public UnityEvent AfterApply = new UnityEvent();
+
 		void Start()
 		{
 			Runner.Setup(ShaderProps.Kernel, (uint)ThreadSize.x, (uint)ThreadSize.y, ShaderProps.ResolutionX);
@@ -47,6 +50,7 @@ namespace Computils.Selectors
 			var facbuf = this.Factors.GetValid();
 			if (posbuf == null || facbuf == null) return;
 			this.UpdateSelectFactors(posbuf, facbuf);
+			this.AfterApply.Invoke();
 		}
 
 		public void UpdateSelectFactors(ComputeBuffer positions, ComputeBuffer factors) {

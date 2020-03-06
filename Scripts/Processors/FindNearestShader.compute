@@ -20,6 +20,7 @@ RWStructuredBuffer<float> feedback_buf; // 0 = distance, 1 = pos.x, 2 = pos.y, 3
 int ResolutionX;
 int BlacklistLength;
 float3 Pos;
+int NearToValue;
 
 [numthreads (thread_group_size_x, thread_group_size_y, 1)]
 void CSCalcDists(uint3 id : SV_DispatchThreadID)
@@ -43,11 +44,12 @@ void CSFindNearest(uint3 id : SV_DispatchThreadID)
     float dist = distances_buf[idx];
     float closestdist = feedback_buf[0]; //.dist;
 
-    if (dist < closestdist) {
+    float curdist = abs(dist-NearToValue);
+    if (curdist < closestdist) {
         float3 p = positions_buf[idx].pos;
 
         index_feedback_buf[0] = idx;
-        feedback_buf[0] = dist;
+        feedback_buf[0] = curdist;
         feedback_buf[1] = p.x;
         feedback_buf[2] = p.y;
         feedback_buf[3] = p.z;
@@ -76,10 +78,11 @@ void CSFindNearestOneRun(uint3 id : SV_DispatchThreadID)
 
         if (!blacklisted) {
             float dist = distances_buf[idx];
+            float curdist = abs(dist-NearToValue);
             // float closestdist = feedback_buf[0]; //.dist;
 
-            if (dist < closestdist) {
-                closestdist = dist;
+            if (curdist < closestdist || idx==0) {
+                closestdist = curdist;
                 closestidx = idx;
             }
         }
