@@ -7,6 +7,9 @@ RWStructuredBuffer<float> factors_buf;
 int ResolutionX;
 float4x4 AlignMat;
 float Falloff;
+float CloseValue;
+float FarValue;
+bool Additive;
 
 [numthreads(8,8,1)]
 void CSLoadSelectFactors (uint3 id : SV_DispatchThreadID)
@@ -14,7 +17,9 @@ void CSLoadSelectFactors (uint3 id : SV_DispatchThreadID)
     const uint idx = id.x + id.y * ResolutionX;
 
     float alignedZ = mul(AlignMat, float4(positions_buf[idx].xyz, 1.0)).z;
-    float factor = clamp(alignedZ / max(Falloff, 0.0001), 0.0, 1.0);
+    float factor = alignedZ / max(Falloff, 0.0001);
+    factor = clamp(factor, 0.0, 1.0);
+    factor = CloseValue + (FarValue-CloseValue) * factor;
 
-    factors_buf[idx] = factor;
+    factors_buf[idx] = Additive ? factors_buf[idx] * factor : factor;
 }

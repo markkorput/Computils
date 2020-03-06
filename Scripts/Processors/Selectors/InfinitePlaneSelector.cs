@@ -12,7 +12,11 @@ namespace Computils.Selectors
 			public const string factors_buf = "factors_buf";         
 			public const string ResolutionX = "ResolutionX";
 			public const string AlignMat = "AlignMat";
+			
 			public const string Falloff = "Falloff";
+			public const string CloseValue = "CloseValue";
+			public const string FarValue = "FarValue";
+			public const string Additive = "Additive";
 		}
       
 		public ShaderRunner Runner;
@@ -23,6 +27,10 @@ namespace Computils.Selectors
       
 		public Transform PlaneTransform;
 		public float Falloff;
+		public float CloseValue = 0.0f;
+		public float FarValue = 1.0f;
+		public bool Additive = false;
+		public bool OnUpdate = true;
 
 		void Start()
 		{
@@ -31,6 +39,10 @@ namespace Computils.Selectors
 
 		void Update()
 		{
+			if (OnUpdate) Apply();
+		}
+
+		public void Apply() {
 			var posbuf = this.Positions.GetValid();
 			var facbuf = this.Factors.GetValid();
 			if (posbuf == null || facbuf == null) return;
@@ -41,6 +53,9 @@ namespace Computils.Selectors
 			Runner.Shader.SetBuffer(this.Runner.Kernel, ShaderProps.factors_buf, factors);
 			Runner.Shader.SetMatrix(ShaderProps.AlignMat, this.PlaneTransform.worldToLocalMatrix);
 			Runner.Shader.SetFloat(ShaderProps.Falloff, this.Falloff);
+			Runner.Shader.SetFloat(ShaderProps.CloseValue, this.CloseValue);
+			Runner.Shader.SetFloat(ShaderProps.FarValue, this.FarValue);
+			Runner.Shader.SetBool(ShaderProps.Additive, this.Additive);
 			Runner.Run(positions, ShaderProps.positions_buf);
 		}
 	}

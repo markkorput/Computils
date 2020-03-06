@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Computils.Selectors
 {
@@ -28,6 +29,10 @@ namespace Computils.Selectors
 		public Transform VertsParent;
 		public BoxCollider Box;
 
+		public bool OnUpdate = true;
+
+		public UnityEvent AfterApply = new UnityEvent();
+
 		void Start()
 		{
 			Runner.Setup(ShaderProps.Kernel, (uint)ThreadSize.x, (uint)ThreadSize.y, ShaderProps.ResolutionX);
@@ -35,6 +40,10 @@ namespace Computils.Selectors
 
 		void Update()
 		{
+			if (OnUpdate) Apply();
+		}
+
+		public void Apply() {
 			var posbuf = this.Positions.GetValid();
 			var facbuf = this.Factors.GetValid();
 			if (posbuf == null) return;
@@ -48,6 +57,7 @@ namespace Computils.Selectors
 			}
 
 			this.UpdateSelectFactors(posbuf, facbuf);
+			this.AfterApply.Invoke();
 		}
 
 		public void UpdateSelectFactors(ComputeBuffer positions, ComputeBuffer factors) {
