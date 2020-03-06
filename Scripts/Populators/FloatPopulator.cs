@@ -71,6 +71,14 @@ namespace Computils.Populators
 			this.Amount = amountbuf.count;
 			this.Populate(this.Amount, this.StartMaxValue, this.StartMinValue);
 		}
+
+		public static ComputeBuffer Populate(ComputeBufferFacade facade, float[] data) {
+			var buf = facade.GetValid();
+			buf = Utils.UpdateOrCreate(buf, data);
+			facade.Set(buf);
+			return buf;
+		}
+
 		#endregion
 	}
 }

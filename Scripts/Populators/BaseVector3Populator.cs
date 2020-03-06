@@ -21,8 +21,7 @@ namespace Computils.Populators
             {
                 AmountFacade.GetValidAsync((amountbuf) =>
                 {
-                    this.Amount = amountbuf.count;
-					this.PopulateNext(this.Amount);
+					this.PopulateNext(amountbuf.count);
                 });
             }
             else
@@ -32,14 +31,13 @@ namespace Computils.Populators
         }
 
 		public virtual Vector3[] GetVerts(int amount) {
-			return new Vector3[0]; // Override this method in child classes
+			return new Vector3[amount]; // Override this method in child classes
 		}
       
 		protected void Populate(Vector3[] data, int offset = 0)
         {
-            var buf = Facade.GetValid();
-            buf = Utils.UpdateOrCreate(buf, data, offset);
-            Facade.Set(buf);
+            BaseVector3Populator.Populate(Facade, data, offset);
+            this.Amount = data.Length;
         }
 
         #region Public Action Methods
@@ -48,7 +46,17 @@ namespace Computils.Populators
 			var verts = GetVerts(amount);
             Populate(verts);
         }
-      
+
+        public static void Populate(ComputeBufferFacade facade, Vector3[] data, int offset=0) {
+            var buf = facade.GetValid();
+            buf = Utils.UpdateOrCreate(buf, data, offset);
+            facade.Set(buf);
+        }
+
+        public static void Populate(ComputeBufferFacade facade, int amount) {
+            Populate(facade, new Vector3[amount]);
+        }
+
         public void Populate(int amount, int offset)
         {
 			var verts = GetVerts(amount);
@@ -65,6 +73,26 @@ namespace Computils.Populators
 			this.offset += (uint)amount;
 			if (this.offset >= max) this.offset = 0;
 		}
+
+        public void PopulateWithDefaultAmount() {
+            var c = this.AmountFacade.GetValid().count;
+            if (c == 0) {
+                Debug.LogWarning("Won't populate with zero length");
+                return;
+            }
+
+            Populate(c);
+        }
+
+        public void EnforeAmount(int count) {
+            var buf = this.Facade.GetValid();
+            if (buf == null || buf.count == count) return;
+            Populate(count);
+        }
+
+        public void EnforeFacadeAmount() {
+            this.EnforeAmount(this.AmountFacade.GetValid().count);
+        }
         #endregion
     }
 }

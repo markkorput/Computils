@@ -18,7 +18,7 @@ namespace Computils.Populators {
 			this.buf = Utils.UpdateOrCreate(this.buf, matrices);
 			this.Facade.Set(buf);
 		}
-      
+
 		private static Matrix4x4[] LoadChildMatrices(Matrix4x4[] matrices, Transform parent)
 		{
 			int c = parent.childCount;

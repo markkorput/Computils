@@ -17,8 +17,13 @@ namespace Computils.Renderers
 		}
 
 		public ComputeBufferFacade VertsBufFacade;
+		
 		[Tooltip("Optional; when set, its localToWorldMatrix is used to calculate vertex world positions")]
 		public Transform VertsParent;
+
+		[Tooltip("Optional; when set, its worldToLocalMatrix is used to calculate vertex world positions")]
+		public Transform VertsWorldToLocal;
+
 		[Tooltip("Optional; when set, it will use these factors as alpha multiplier")]
 		public ComputeBufferFacade AlphaFactorsFacade;
 		public Material RenderMaterial;
@@ -44,7 +49,14 @@ namespace Computils.Renderers
 
 			if (buf != null)
 			{
-				Render(this.RenderMaterial, buf, this.VertsParent, this.MeshTopology, this.MainColor, this.AlphaFactorsFacade == null ? null : this.AlphaFactorsFacade.GetValid());
+				Matrix4x4 transformMatrix = 
+					this.VertsParent != null
+						? this.VertsParent.localToWorldMatrix
+						: (this.VertsWorldToLocal != null ?
+							this.VertsWorldToLocal.worldToLocalMatrix
+							: Matrix4x4.identity);
+
+				Render(this.RenderMaterial, buf, transformMatrix, this.MeshTopology, this.MainColor, this.AlphaFactorsFacade == null ? null : this.AlphaFactorsFacade.GetValid());
 #if UNITY_EDITOR
 				this.VertCount = buf.count;
 #endif
@@ -53,13 +65,13 @@ namespace Computils.Renderers
 		#endregion
 
 
-		private static void Render(Material mat, ComputeBuffer vertsBuffer, Transform Parent, MeshTopology topo, Color clr, ComputeBuffer alphaFactorsBuf = null)
+		private static void Render(Material mat, ComputeBuffer vertsBuffer, Matrix4x4 transformMatrix, MeshTopology topo, Color clr, ComputeBuffer alphaFactorsBuf = null)
 		{
 			mat.SetPass(0);
 			mat.SetBuffer(ShaderProps.buf_verts, vertsBuffer);
 			mat.SetColor(ShaderProps.MainColor, clr);
 			mat.SetInt(ShaderProps.UseAlphaFactors, alphaFactorsBuf == null ? 0 : 1);
-			mat.SetMatrix(ShaderProps.LocalToWorldMatrix, Parent == null ? Matrix4x4.identity : Parent.localToWorldMatrix);
+			mat.SetMatrix(ShaderProps.LocalToWorldMatrix, transformMatrix);
 			if (alphaFactorsBuf != null) mat.SetBuffer(ShaderProps.buf_alphafactors, alphaFactorsBuf);
 
 			Graphics.DrawProceduralNow(topo, vertsBuffer.count);
