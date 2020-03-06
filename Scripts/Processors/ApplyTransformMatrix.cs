@@ -50,7 +50,7 @@ namespace Computils.Processors
 			var targetsBuf = this.TargetsFacade == null ? null : this.TargetsFacade.Get();
 
 			if (vertBuf == null) {
-                Debug.LogWarning("Source buffer is null");
+                // Debug.LogWarning("Source buffer is null");
                 return; // TODO; log something?
             }
 
