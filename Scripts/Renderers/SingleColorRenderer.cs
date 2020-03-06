@@ -30,6 +30,7 @@ namespace Computils.Renderers
 		public int VertCount = 0;
 #endif
 
+		#region Unity Methods
 		private void Start()
 		{
 			this.RenderMaterial = new Material(this.RenderMaterial);
@@ -49,6 +50,8 @@ namespace Computils.Renderers
 #endif
 			}
 		}
+		#endregion
+
 
 		private static void Render(Material mat, ComputeBuffer vertsBuffer, Transform Parent, MeshTopology topo, Color clr, ComputeBuffer alphaFactorsBuf = null)
 		{
@@ -63,6 +66,10 @@ namespace Computils.Renderers
 		}
 
 		#region Public Methods
+		public void Render() {
+			OnPostRender();
+		}
+
 		public void CycleTopology() {
 			MeshTopology topo = MeshTopology.Lines;
          
